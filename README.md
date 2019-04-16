@@ -31,6 +31,10 @@ Massive thanks to guys from Yalantis for open sourcing this great library!
 
 ## Changelog (<a href="https://github.com/Yalantis/uCrop#changelog">uCrop Changelog</a>)
 
+### Version 2.2.4 (based on uCrop 2.2.3)
+
+  * Merged new version from uCrop.
+
 ### Version 2.2.3 (based on uCrop 2.2.2)
 
   * Merged new version from uCrop.
