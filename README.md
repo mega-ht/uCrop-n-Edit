@@ -19,7 +19,7 @@
 	}
 	```
 
-    ``` implementation 'com.github.krokyze:ucropnedit:2.2.5' ```
+    ``` implementation 'com.github.krokyze:ucropnedit:2.2.6' ```
     
 2. To use uCrop’n’Edit, you can follow the exact same methods as for uCrop: <a href="https://github.com/Yalantis/uCrop#usage">Usage</a>
 
@@ -30,6 +30,10 @@ If you have any interesting ideas for uCrop’n’Edit do not be afraid to let m
 Massive thanks to guys from Yalantis for open sourcing this great library!
 
 ## Changelog (<a href="https://github.com/Yalantis/uCrop#changelog">uCrop Changelog</a>)
+
+### Version 2.2.6 (based on uCrop 2.2.6)
+
+  * Merged new version from uCrop.
 
 ### Version 2.2.5 (based on uCrop 2.2.4)
 

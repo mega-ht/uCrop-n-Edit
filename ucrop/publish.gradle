@@ -2,7 +2,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 group = 'com.github.krokyze'
-version = '2.2.5'
+version = '2.2.6'
 
 publishing {
     publications {
@@ -51,7 +51,7 @@ bintray {
         licenses = ["Apache-2.0"]
         
         version {
-            name = "2.2.5"
+            name = "2.2.6"
 
             gpg {
                 sign = true
