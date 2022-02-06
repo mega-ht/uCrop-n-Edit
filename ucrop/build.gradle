@@ -3,16 +3,16 @@ apply plugin: 'kotlin-android'
 
 ext {
     PUBLISH_GROUP_ID = 'com.github.krokyze'
-    PUBLISH_VERSION = '2.2.6'
+    PUBLISH_VERSION = '2.2.8'
     PUBLISH_ARTIFACT_ID = 'ucropnedit'
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 31
         versionCode 26
         versionName PUBLISH_VERSION
 
@@ -45,11 +45,12 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0'
-    implementation 'androidx.transition:transition:1.2.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:${androidx_appcompat_version}"
+    implementation "androidx.exifinterface:exifinterface:${androidx_exifinterface_version}"
+    implementation "androidx.transition:transition:${androidx_transition_version}"
+    // OkHttp3 versions above 3.12.x don't support pre-Lollipop Android versions (API 21)
+    implementation "com.squareup.okhttp3:okhttp:3.12.13"
 }
 
 apply from: 'publish.gradle'
