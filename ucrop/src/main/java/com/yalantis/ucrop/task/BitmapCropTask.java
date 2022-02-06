@@ -16,7 +16,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicConvolve3x3;
-import android.renderscript.Type;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -139,11 +138,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
                     RenderScript rs = RenderScript.create(mContext);
 
                     // Allocate buffers
-                    Allocation inAllocation = Allocation.createFromBitmap(rs, alteredBitmap);
-
-                    //Create allocation with the same type
-                    Type type = inAllocation.getType();
-                    Allocation outAllocation = Allocation.createTyped(rs, type);
+                    Allocation inAllocation = Allocation.createFromBitmap(rs, sourceBitmap);
+                    Allocation outAllocation = Allocation.createFromBitmap(rs, alteredBitmap);
 
                     // Load script
                     ScriptIntrinsicConvolve3x3 sharpnessScript = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));

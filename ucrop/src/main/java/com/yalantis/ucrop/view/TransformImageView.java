@@ -15,7 +15,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicConvolve3x3;
-import android.renderscript.Type;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -363,7 +362,6 @@ public class TransformImageView extends AppCompatImageView {
      *
      * @param sharpness - sharpness
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void postSharpness(float sharpness) {
         mSharpness += sharpness;
         mSharpness = Math.min(5, Math.max(0, mSharpness));
@@ -419,7 +417,11 @@ public class TransformImageView extends AppCompatImageView {
         }
 
         private void updateView() {
-            mOutAllocation.copyTo(getViewBitmap());
+            Bitmap sourceBitmap = getViewBitmap();
+            Bitmap alteredBitmap = sourceBitmap.copy(sourceBitmap.getConfig(), false);
+
+            mOutAllocation.copyTo(alteredBitmap);
+            setImageBitmap(alteredBitmap);
         }
     }
 
@@ -509,20 +511,22 @@ public class TransformImageView extends AppCompatImageView {
      * <p>
      * <p>Creates RenderScript kernel that performs sharpness manipulation.</p>
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void createScript(Bitmap bitmap) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return;
+        }
+
         // Initialize RS
         RenderScript rs = RenderScript.create(getContext());
 
         // Allocate buffers
-        mInAllocation = Allocation.createFromBitmap(rs, bitmap.copy(bitmap.getConfig(), true));
-
-        //Create allocation with the same type
-        Type type = mInAllocation.getType();
-        mOutAllocation = Allocation.createTyped(rs, type);
+        mInAllocation = Allocation.createFromBitmap(rs, bitmap.copy(bitmap.getConfig(), false));
+        mOutAllocation = Allocation.createFromBitmap(rs, bitmap);
 
         // Load script
         mSharpnessScript = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
         mSharpnessScript.setInput(mInAllocation);
+
+        rs.destroy();
     }
 }
