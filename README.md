@@ -1,12 +1,10 @@
-# uCrop'n'Edit - Image Cropping + Editing Library for Android
-
 ## This is a forked repository
 This is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> which is a fork
 of <a href="https://github.com/Yalantis/uCrop">uCrop</a>".
 
 I fixed some bugs, updated the dependencies and tried to translate as much as possible to kotlin.
 
-
+# uCrop'n'Edit - Image Cropping + Editing Library for Android
 #### Using the source code of "<a href="https://github.com/Yalantis/uCrop">uCrop</a>", I’ve added four new features - ability to change Brightness, Contrast, Saturation and Sharpness.
 
 <p align="center" style="background-color:#ededed">
