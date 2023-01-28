@@ -429,6 +429,8 @@ open class CropImageView @JvmOverloads constructor(
             Math.min(mCropRect.height() / drawableHeight, mCropRect.height() / drawableWidth)
         minScale = Math.min(widthScale, heightScale)
         maxScale = minScale * mMaxScaleMultiplier
+        val currentScale = currentScale
+        if (maxScale < currentScale) maxScale = currentScale
     }
 
     /**
