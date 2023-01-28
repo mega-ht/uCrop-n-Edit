@@ -313,10 +313,10 @@ open class CropImageView @JvmOverloads constructor(
         val deltaRight = unrotatedImageRect.right - unrotatedCropRect.right
         val deltaBottom = unrotatedImageRect.bottom - unrotatedCropRect.bottom
         val indents = FloatArray(4)
-        indents[0] = (if (deltaLeft > 0) deltaLeft else 0) as Float
-        indents[1] = (if (deltaTop > 0) deltaTop else 0) as Float
-        indents[2] = (if (deltaRight < 0) deltaRight else 0) as Float
-        indents[3] = (if (deltaBottom < 0) deltaBottom else 0) as Float
+        indents[0] = (if (deltaLeft > 0) deltaLeft else 0).toFloat()
+        indents[1] = (if (deltaTop > 0) deltaTop else 0).toFloat()
+        indents[2] = (if (deltaRight < 0) deltaRight else 0).toFloat()
+        indents[3] = (if (deltaBottom < 0) deltaBottom else 0).toFloat()
         mTempMatrix.reset()
         mTempMatrix.setRotate(currentAngle)
         mTempMatrix.mapPoints(indents)
