@@ -110,8 +110,8 @@ class GestureCropImageView : CropImageView {
     }
 
     private inner class RotateListener : SimpleOnRotationGestureListener() {
-        override fun onRotation(rotationDetector: RotationGestureDetector): Boolean {
-            postRotate(rotationDetector.angle, mMidPntX, mMidPntY)
+        override fun onRotation(rotationDetector: RotationGestureDetector?): Boolean {
+            postRotate(rotationDetector!!.angle, mMidPntX, mMidPntY)
             return true
         }
     }
