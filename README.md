@@ -2,7 +2,7 @@
 
 ## This is a forked repository
 This is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> which is a fork
-of <a href="<a href="https://github.com/Yalantis/uCrop">uCrop</a>".
+of <a href="https://github.com/Yalantis/uCrop">uCrop</a>".
 
 I fixed some bugs, updated the dependencies and tried to translate as much as possible to kotlin.
 
