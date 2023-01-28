@@ -33,6 +33,7 @@ import com.yalantis.ucrop.util.ImageHeaderParser;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 /**
  * Crops part of image that fills the crop bounds.
@@ -49,13 +50,14 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         System.loadLibrary("ucrop");
     }
 
-    private Context mContext;
+    private final WeakReference<Context> contextRef;
     private Bitmap mViewBitmap;
 
     private final RectF mCropRect;
     private final RectF mCurrentImageRect;
 
-    private float mCurrentScale, mCurrentAngle;
+    private float mCurrentScale;
+    private final float mCurrentAngle;
     private final int mMaxResultImageSizeX, mMaxResultImageSizeY;
 
     private final Bitmap.CompressFormat mCompressFormat;
@@ -64,18 +66,18 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
     private final ExifInfo mExifInfo;
     private final BitmapCropCallback mCropCallback;
 
-    private float mBrightness;
-    private float mContrast;
-    private float mSaturation;
+    private final float mBrightness;
+    private final float mContrast;
+    private final float mSaturation;
 
-    private float mSharpness;
+    private final float mSharpness;
 
     private int mCroppedImageWidth, mCroppedImageHeight;
     private int cropOffsetX, cropOffsetY;
 
     public BitmapCropTask(@NonNull Context context, @Nullable Bitmap viewBitmap, @NonNull ImageState imageState, @NonNull CropParameters cropParameters,
                           @Nullable BitmapCropCallback cropCallback) {
-        mContext = context;
+        contextRef = new WeakReference<>(context);
         mViewBitmap = viewBitmap;
         mCropRect = imageState.getCropRect();
         mCurrentImageRect = imageState.getCurrentImageRect();
@@ -135,7 +137,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
                 canvas.drawBitmap(sourceBitmap, matrix, paint);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mSharpness != 0.0f) {
-                    RenderScript rs = RenderScript.create(mContext);
+                    RenderScript rs = RenderScript.create(contextRef.get());
 
                     // Allocate buffers
                     Allocation inAllocation = Allocation.createFromBitmap(rs, sourceBitmap);
@@ -266,5 +268,4 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
             }
         }
     }
-
 }
