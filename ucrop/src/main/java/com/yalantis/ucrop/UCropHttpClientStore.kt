@@ -1,26 +1,18 @@
-package com.yalantis.ucrop;
+package com.yalantis.ucrop
 
-import androidx.annotation.NonNull;
+import okhttp3.OkHttpClient
 
-import okhttp3.OkHttpClient;
-
-public class UCropHttpClientStore {
-
-    private UCropHttpClientStore() {}
-
-    public final static UCropHttpClientStore INSTANCE = new UCropHttpClientStore();
-
-    private OkHttpClient client;
-
-    @NonNull
-    public OkHttpClient getClient() {
-        if (client == null) {
-            client = new OkHttpClient();
+class UCropHttpClientStore private constructor() {
+    var client: OkHttpClient? = null
+        get() {
+            if (field == null) {
+                field = OkHttpClient()
+            }
+            return field
         }
-        return client;
-    }
 
-    public void setClient(@NonNull OkHttpClient client) {
-        this.client = client;
+    companion object {
+        @JvmField
+        val INSTANCE = UCropHttpClientStore()
     }
 }

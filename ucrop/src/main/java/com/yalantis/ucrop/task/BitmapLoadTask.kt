@@ -198,12 +198,16 @@ class BitmapLoadTask(
             val request: Request = Request.Builder()
                 .url(inputUri.toString())
                 .build()
-            response = client.newCall(request).execute()
-            source = response.body!!.source()
+            if (client != null) {
+                response = client.newCall(request).execute()
+            }
+            if (response != null) {
+                source = response.body!!.source()
+            }
             val outputStream = mContext.contentResolver.openOutputStream(outputUri)
             if (outputStream != null) {
                 sink = outputStream.sink()
-                source.readAll(sink)
+                source?.readAll(sink)
             } else {
                 throw NullPointerException("OutputStream for given output Uri is null")
             }
@@ -213,7 +217,7 @@ class BitmapLoadTask(
             if (response != null) {
                 BitmapLoadUtils.close(response.body)
             }
-            client.dispatcher.cancelAll()
+            client?.dispatcher?.cancelAll()
 
             // swap uris, because input image was downloaded to the output destination
             // (cropped image will override it later)
