@@ -65,10 +65,10 @@ afterEvaluate {
     }
 }
 
-signing {
+/*signing {
     useInMemoryPgpKeys(
             rootProject.ext["signing.key"],
             rootProject.ext["signing.password"],
     )
     sign publishing.publications
-}
+}*/

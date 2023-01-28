@@ -1,6 +1,5 @@
 package com.yalantis.ucrop.util
 
-import android.R
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.StateListDrawable
@@ -11,14 +10,14 @@ import android.graphics.drawable.StateListDrawable
 class SelectedStateListDrawable(drawable: Drawable?, private val mSelectionColor: Int) :
     StateListDrawable() {
     init {
-        addState(intArrayOf(R.attr.state_selected), drawable)
+        addState(intArrayOf(android.R.attr.state_selected), drawable)
         addState(intArrayOf(), drawable)
     }
 
     override fun onStateChange(states: IntArray): Boolean {
         var isStatePressedInArray = false
         for (state in states) {
-            if (state == R.attr.state_selected) {
+            if (state == android.R.attr.state_selected) {
                 isStatePressedInArray = true
             }
         }
