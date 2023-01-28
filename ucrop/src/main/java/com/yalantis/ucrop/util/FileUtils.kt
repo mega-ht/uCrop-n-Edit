@@ -13,52 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.yalantis.ucrop.util
 
-package com.yalantis.ucrop.util;
-
-import android.annotation.SuppressLint;
-import android.content.ContentUris;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.util.Locale;
-
-import androidx.annotation.NonNull;
+import android.annotation.SuppressLint
+import android.content.ContentUris
+import android.content.Context
+import android.database.Cursor
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
+import android.text.TextUtils
+import android.util.Log
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.nio.channels.FileChannel
+import java.util.*
 
 /**
  * @author Peli
  * @author paulburke (ipaulpro)
  * @version 2013-12-11
  */
-public class FileUtils {
-
+object FileUtils {
     /**
      * TAG for log messages.
      */
-    private static final String TAG = "FileUtils";
-
-    private FileUtils() {
-    }
+    private const val TAG = "FileUtils"
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      * @author paulburke
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    fun isExternalStorageDocument(uri: Uri): Boolean {
+        return "com.android.externalstorage.documents" == uri.authority
     }
 
     /**
@@ -66,8 +58,8 @@ public class FileUtils {
      * @return Whether the Uri authority is DownloadsProvider.
      * @author paulburke
      */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    fun isDownloadsDocument(uri: Uri): Boolean {
+        return "com.android.providers.downloads.documents" == uri.authority
     }
 
     /**
@@ -75,16 +67,16 @@ public class FileUtils {
      * @return Whether the Uri authority is MediaProvider.
      * @author paulburke
      */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    fun isMediaDocument(uri: Uri): Boolean {
+        return "com.android.providers.media.documents" == uri.authority
     }
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    fun isGooglePhotosUri(uri: Uri): Boolean {
+        return "com.google.android.apps.photos.content" == uri.authority
     }
 
     /**
@@ -98,37 +90,40 @@ public class FileUtils {
      * @return The value of the _data column, which is typically a file path.
      * @author paulburke
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
+    fun getDataColumn(
+        context: Context, uri: Uri?, selection: String?,
+        selectionArgs: Array<String>?
+    ): String? {
+        var cursor: Cursor? = null
+        val column = "_data"
+        val projection = arrayOf(
+            column
+        )
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
+            cursor = context.contentResolver.query(
+                uri!!, projection, selection, selectionArgs,
+                null
+            )
             if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
+                val column_index = cursor.getColumnIndexOrThrow(column)
+                return cursor.getString(column_index)
             }
-        } catch (IllegalArgumentException ex) {
-            Log.i(TAG, String.format(Locale.getDefault(), "getDataColumn: _data - [%s]", ex.getMessage()));
+        } catch (ex: IllegalArgumentException) {
+            Log.i(
+                TAG,
+                String.format(Locale.getDefault(), "getDataColumn: _data - [%s]", ex.message)
+            )
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            cursor?.close()
         }
-        return null;
+        return null
     }
 
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
-     * other file-based ContentProviders.<br>
-     * <br>
+     * other file-based ContentProviders.<br></br>
+     * <br></br>
      * Callers should check whether the path is local before assuming it
      * represents a local file.
      *
@@ -137,77 +132,62 @@ public class FileUtils {
      * @author paulburke
      */
     @SuppressLint("NewApi")
-    public static String getPath(final Context context, final Uri uri) {
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    fun getPath(context: Context, uri: Uri): String? {
+        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val type = split[0]
+                if ("primary".equals(type, ignoreCase = true)) {
+                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
                 }
 
                 // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
+            } else if (isDownloadsDocument(uri)) {
+                val id = DocumentsContract.getDocumentId(uri)
                 if (!TextUtils.isEmpty(id)) {
-                    try {
-                        final Uri contentUri = ContentUris.withAppendedId(
-                                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                        return getDataColumn(context, contentUri, null, null);
-                    } catch (NumberFormatException e) {
-                        Log.i(TAG, e.getMessage());
-                        return null;
+                    return try {
+                        val contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"),
+                            java.lang.Long.valueOf(id)
+                        )
+                        getDataColumn(context, contentUri, null, null)
+                    } catch (e: NumberFormatException) {
+                        Log.i(TAG, e.message!!)
+                        null
                     }
                 }
-
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            } else if (isMediaDocument(uri)) {
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val type = split[0]
+                var contentUri: Uri? = null
+                if ("image" == type) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                } else if ("video" == type) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                } else if ("audio" == type) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                 }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
-                        split[1]
-                };
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
+                val selection = "_id=?"
+                val selectionArgs = arrayOf(
+                    split[1]
+                )
+                return getDataColumn(context, contentUri, selection, selectionArgs)
             }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("content".equals(uri.scheme, ignoreCase = true)) {
 
             // Return the remote address
-            if (isGooglePhotosUri(uri)) {
-                return uri.getLastPathSegment();
-            }
-
-            return getDataColumn(context, uri, null, null);
+            return if (isGooglePhotosUri(uri)) {
+                uri.lastPathSegment
+            } else getDataColumn(context, uri, null, null)
+        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
+            return uri.path
         }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
+        return null
     }
 
     /**
@@ -216,22 +196,22 @@ public class FileUtils {
      * will cause both files to become null.
      * Simply skipping this step if the paths are identical.
      */
-    public static void copyFile(@NonNull String pathFrom, @NonNull String pathTo) throws IOException {
-        if (pathFrom.equalsIgnoreCase(pathTo)) {
-            return;
+    @JvmStatic
+    @Throws(IOException::class)
+    fun copyFile(pathFrom: String, pathTo: String) {
+        if (pathFrom.equals(pathTo, ignoreCase = true)) {
+            return
         }
-
-        FileChannel outputChannel = null;
-        FileChannel inputChannel = null;
+        var outputChannel: FileChannel? = null
+        var inputChannel: FileChannel? = null
         try {
-            inputChannel = new FileInputStream(new File(pathFrom)).getChannel();
-            outputChannel = new FileOutputStream(new File(pathTo)).getChannel();
-            inputChannel.transferTo(0, inputChannel.size(), outputChannel);
-            inputChannel.close();
+            inputChannel = FileInputStream(File(pathFrom)).channel
+            outputChannel = FileOutputStream(File(pathTo)).channel
+            inputChannel.transferTo(0, inputChannel.size(), outputChannel)
+            inputChannel.close()
         } finally {
-            if (inputChannel != null) inputChannel.close();
-            if (outputChannel != null) outputChannel.close();
+            inputChannel?.close()
+            outputChannel?.close()
         }
     }
-
 }
