@@ -37,7 +37,9 @@ class UCropView @JvmOverloads constructor(
         }
         overlayView.overlayViewChangeListener = object : OverlayViewChangeListener {
             override fun onCropRectUpdated(cropRect: RectF?) {
-                cropImageView.setCropRect(cropRect)
+                if (cropRect != null) {
+                    cropImageView.setCropRect(cropRect)
+                }
             }
         }
     }
