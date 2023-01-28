@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlin_version = '1.5.21'
+        kotlin_version = '1.6.21'
         androidx_appcompat_version = "1.1.0"
         androidx_core_version = "1.1.0"
         androidx_exifinterface_version = "1.1.0"
@@ -12,8 +12,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:7.4.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21"
         classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
     }
 }
