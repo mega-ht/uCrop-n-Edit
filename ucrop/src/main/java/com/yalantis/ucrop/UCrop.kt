@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.FloatRange
@@ -107,6 +108,15 @@ class UCrop private constructor(source: Uri, destination: Uri) {
      */
     fun start(context: Context, fragment: Fragment) {
         start(context, fragment, REQUEST_CROP)
+    }
+
+    /**
+     * Launch the crop Intent from a ActivityResultLauncher
+     *
+     * @param activityResult ActivityResult to receive result
+     */
+    fun start(context: Context, activityResult: ActivityResultLauncher<Intent>) {
+        activityResult.launch(getIntent(context))
     }
 
     /**
