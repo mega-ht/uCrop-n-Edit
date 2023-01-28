@@ -32,6 +32,7 @@ import com.yalantis.ucrop.UCropFragmentCallback;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 import androidx.annotation.ColorInt;
@@ -91,6 +92,7 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == requestMode) {
                 final Uri selectedUri = data.getData();
@@ -407,12 +409,12 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
 
     @Override
     public void onCropFinish(UCropFragment.UCropResult result) {
-        switch (result.mResultCode) {
+        switch (Objects.requireNonNull(result).getMResultCode()) {
             case RESULT_OK:
-                handleCropResult(result.mResultData);
+                handleCropResult(result.getMResultData());
                 break;
             case UCrop.RESULT_ERROR:
-                handleCropError(result.mResultData);
+                handleCropError(result.getMResultData());
                 break;
         }
         removeFragmentFromScreen();
