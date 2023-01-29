@@ -5,17 +5,20 @@ import android.graphics.*
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
+import androidx.annotation.NonNull
 import com.yalantis.ucrop.UCropHttpClientStore
 import com.yalantis.ucrop.callback.BitmapLoadCallback
 import com.yalantis.ucrop.model.ExifInfo
 import com.yalantis.ucrop.task.BitmapLoadTask.BitmapWorkerResult
 import com.yalantis.ucrop.util.BitmapLoadUtils
+import com.yalantis.ucrop.util.BitmapLoadUtils.close
 import okhttp3.Request
 import okhttp3.Response
 import okio.BufferedSource
 import okio.Sink
 import okio.sink
 import java.io.*
+
 
 /**
  * Creates and returns a Bitmap for a given Uri(String url).
@@ -69,7 +72,7 @@ class BitmapLoadTask(
             return BitmapWorkerResult(e)
         }
         val options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
+        BitmapLoadUtils.decodeDimensions(mContext, mInputUri, options);
         options.inSampleSize =
             BitmapLoadUtils.calculateInSampleSize(options, mRequiredWidth, mRequiredHeight)
         options.inJustDecodeBounds = false

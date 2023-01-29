@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import android.util.Log
 import android.view.Display
 import android.view.WindowManager
+import androidx.annotation.NonNull
 import androidx.exifinterface.media.ExifInterface
 import com.yalantis.ucrop.callback.BitmapLoadCallback
 import com.yalantis.ucrop.task.BitmapLoadTask
@@ -49,6 +50,23 @@ object BitmapLoadUtils {
             Log.e(TAG, "transformBitmap: ", error)
         }
         return bitmap
+    }
+
+    fun decodeDimensions(
+        context: Context,
+        uri: Uri?,
+        options: BitmapFactory.Options
+    ) {
+        options.inJustDecodeBounds = true
+        try {
+            val `is` = context.contentResolver.openInputStream(uri!!)
+            try {
+                BitmapFactory.decodeStream(`is`, null, options)
+            } finally {
+                close(`is`)
+            }
+        } catch (ignored: IOException) {
+        }
     }
 
     fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
