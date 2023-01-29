@@ -72,7 +72,7 @@ class BitmapLoadTask(
             return BitmapWorkerResult(e)
         }
         val options = BitmapFactory.Options()
-        BitmapLoadUtils.decodeDimensions(mContext, mInputUri, options);
+        BitmapLoadUtils.decodeDimensions(mContext, mInputUri, options)
         options.inSampleSize =
             BitmapLoadUtils.calculateInSampleSize(options, mRequiredWidth, mRequiredHeight)
         options.inJustDecodeBounds = false
