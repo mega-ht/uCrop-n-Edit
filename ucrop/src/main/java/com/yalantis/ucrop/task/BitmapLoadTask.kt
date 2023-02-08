@@ -60,6 +60,7 @@ class BitmapLoadTask(
         mBitmapLoadCallback = loadCallback
     }
 
+    @Deprecated("")
     override fun doInBackground(vararg params: Void?): BitmapWorkerResult? {
         if (mInputUri == null) {
             return BitmapWorkerResult(NullPointerException("Input Uri cannot be null"))
@@ -228,6 +229,7 @@ class BitmapLoadTask(
         }
     }
 
+    @Deprecated("")
     override fun onPostExecute(result: BitmapWorkerResult) {
         if (result.mBitmapWorkerException == null) {
             mBitmapLoadCallback.onBitmapLoaded(
