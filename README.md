@@ -24,7 +24,7 @@ To use uCrop'n'Edit, include the library as a local library project in your buil
 	...
 	
 	dependencies {
-	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.0'
+	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.2'
 	}
 	
 
