@@ -36,6 +36,10 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 ## Changelog
 
+**3.0.2**
+
+- downgraded gradle to 7.4 (Because jitpack.io does not support higher versions at the moment)
+
 **3.0.1**
 
 - updated to newest gradle version
