@@ -150,6 +150,16 @@ class UCrop private constructor(source: Uri, destination: Uri) {
     }
 
     /**
+     * Launch the crop Intent from a ActivityResultLauncher
+     *
+     * @param activityResult ActivityResult to receive result
+     * @param extra          Extra Bundle to pass to the Activity
+     */
+    fun startWithExtra(context: Context, activityResult: ActivityResultLauncher<Intent>, extra: Bundle) {
+        activityResult.launch(getIntent(context, extra))
+    }
+
+    /**
      * Get Intent to start [UCropActivity]
      *
      * @return Intent for [UCropActivity]
@@ -157,6 +167,18 @@ class UCrop private constructor(source: Uri, destination: Uri) {
     fun getIntent(context: Context): Intent {
         mCropIntent.setClass(context, UCropActivity::class.java)
         mCropIntent.putExtras(mCropOptionsBundle)
+        return mCropIntent
+    }
+
+    /**
+     * Get Intent to start [UCropActivity] with extra bundle
+     *
+     * @return Intent for [UCropActivity]
+     */
+    fun getIntent(context: Context, extra: Bundle): Intent {
+        mCropIntent.setClass(context, UCropActivity::class.java)
+        mCropIntent.putExtras(mCropOptionsBundle)
+        mCropIntent.putExtra("EXTRA-BUNDLE", extra)
         return mCropIntent
     }
 

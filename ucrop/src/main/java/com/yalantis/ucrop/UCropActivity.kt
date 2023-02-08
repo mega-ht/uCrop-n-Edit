@@ -973,15 +973,30 @@ class UCropActivity : AppCompatActivity() {
         imageWidth: Int,
         imageHeight: Int
     ) {
-        setResult(
-            RESULT_OK, Intent()
-                .putExtra(UCrop.EXTRA_OUTPUT_URI, uri)
-                .putExtra(UCrop.EXTRA_OUTPUT_CROP_ASPECT_RATIO, resultAspectRatio)
-                .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_WIDTH, imageWidth)
-                .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
-                .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_X, offsetX)
-                .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_Y, offsetY)
-        )
+        val bundle = intent.extras?.getBundle("EXTRA-BUNDLE")
+
+        if(bundle != null){
+            setResult(
+                RESULT_OK, Intent()
+                    .putExtra(UCrop.EXTRA_OUTPUT_URI, uri)
+                    .putExtra(UCrop.EXTRA_OUTPUT_CROP_ASPECT_RATIO, resultAspectRatio)
+                    .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_WIDTH, imageWidth)
+                    .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
+                    .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_X, offsetX)
+                    .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_Y, offsetY)
+                    .putExtra("EXTRA-BUNDLE", bundle)
+            )
+        }else{
+            setResult(
+                RESULT_OK, Intent()
+                    .putExtra(UCrop.EXTRA_OUTPUT_URI, uri)
+                    .putExtra(UCrop.EXTRA_OUTPUT_CROP_ASPECT_RATIO, resultAspectRatio)
+                    .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_WIDTH, imageWidth)
+                    .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
+                    .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_X, offsetX)
+                    .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_Y, offsetY)
+            )
+        }
     }
 
     protected fun setResultError(throwable: Throwable?) {
