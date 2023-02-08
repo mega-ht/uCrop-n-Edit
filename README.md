@@ -36,6 +36,11 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 ## Changelog
 
+**3.0.1**
+
+- updated to newest gradle version
+- added option to pass an extra-bundle to the intent. This will be passed back after the cropping.
+
 **3.0.0** - Based on <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> 2.2.8 and <a href="https://github.com/Yalantis/uCrop">uCrop</a> 2.2.8:
 
 - updated to newest gradle version
