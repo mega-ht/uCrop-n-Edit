@@ -26,7 +26,9 @@ import com.yalantis.ucrop.UCropActivity
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import com.yalantis.ucrop.model.AspectRatio
 import com.yalantis.ucrop.sample.ResultActivity.Companion.startWithUri
+import com.yalantis.ucrop.view.CropImageView
 import java.io.File
 import java.util.*
 
@@ -332,13 +334,13 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
 
         // Aspect ratio options
         options.setAspectRatioOptions(2,
-            new AspectRatio("WOW", 1, 2),
-            new AspectRatio("MUCH", 3, 4),
-            new AspectRatio("RATIO", CropImageView.DEFAULT_ASPECT_RATIO, CropImageView.DEFAULT_ASPECT_RATIO),
-            new AspectRatio("SO", 16, 9),
-            new AspectRatio("ASPECT", 1, 1));
-        options.withAspectRatio(CropImageView.DEFAULT_ASPECT_RATIO, CropImageView.DEFAULT_ASPECT_RATIO);
-        options.useSourceImageAspectRatio();
+            AspectRatio("WOW", 1F, 2F),
+            AspectRatio("MUCH", 3F, 4F),
+            AspectRatio("RATIO", CropImageView.DEFAULT_ASPECT_RATIO, CropImageView.DEFAULT_ASPECT_RATIO),
+            AspectRatio("SO", 16F, 9F),
+            AspectRatio("ASPECT", 1F, 1F))
+        //options.withAspectRatio(CropImageView.DEFAULT_ASPECT_RATIO, CropImageView.DEFAULT_ASPECT_RATIO)
+        //options.useSourceImageAspectRatio();
 
        */return uCrop.withOptions(options)
     }
