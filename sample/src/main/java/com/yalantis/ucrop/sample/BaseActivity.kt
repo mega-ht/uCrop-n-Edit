@@ -1,52 +1,44 @@
-package com.yalantis.ucrop.sample;
+package com.yalantis.ucrop.sample
 
-import android.content.DialogInterface;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
-public class BaseActivity extends AppCompatActivity {
-
-    protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
-    protected static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
-
-    private AlertDialog mAlertDialog;
+open class BaseActivity : AppCompatActivity() {
+    private var mAlertDialog: AlertDialog? = null
 
     /**
      * Hide alert dialog if any.
      */
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAlertDialog != null && mAlertDialog.isShowing()) {
-            mAlertDialog.dismiss();
+    override fun onStop() {
+        super.onStop()
+        if (mAlertDialog != null && mAlertDialog!!.isShowing) {
+            mAlertDialog!!.dismiss()
         }
     }
-
 
     /**
      * Requests given permission.
      * If the permission has been denied previously, a Dialog will prompt the user to grant the
      * permission, otherwise it is requested directly.
      */
-    protected void requestPermission(final String permission, String rationale, final int requestCode) {
+    protected fun requestPermission(permission: String, rationale: String?, requestCode: Int) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             showAlertDialog(getString(R.string.permission_title_rationale), rationale,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(BaseActivity.this,
-                                    new String[]{permission}, requestCode);
-                        }
-                    }, getString(R.string.label_ok), null, getString(R.string.label_cancel));
+                { dialog, which ->
+                    ActivityCompat.requestPermissions(
+                        this@BaseActivity,
+                        arrayOf(permission),
+                        requestCode
+                    )
+                }, getString(R.string.label_ok), null, getString(R.string.label_cancel)
+            )
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
         }
     }
 
@@ -61,17 +53,23 @@ public class BaseActivity extends AppCompatActivity {
      * @param onNegativeButtonClickListener - listener for negative button
      * @param negativeText                  - negative button text
      */
-    protected void showAlertDialog(@Nullable String title, @Nullable String message,
-                                   @Nullable DialogInterface.OnClickListener onPositiveButtonClickListener,
-                                   @NonNull String positiveText,
-                                   @Nullable DialogInterface.OnClickListener onNegativeButtonClickListener,
-                                   @NonNull String negativeText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setPositiveButton(positiveText, onPositiveButtonClickListener);
-        builder.setNegativeButton(negativeText, onNegativeButtonClickListener);
-        mAlertDialog = builder.show();
+    protected fun showAlertDialog(
+        title: String?, message: String?,
+        onPositiveButtonClickListener: DialogInterface.OnClickListener?,
+        positiveText: String,
+        onNegativeButtonClickListener: DialogInterface.OnClickListener?,
+        negativeText: String
+    ) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton(positiveText, onPositiveButtonClickListener)
+        builder.setNegativeButton(negativeText, onNegativeButtonClickListener)
+        mAlertDialog = builder.show()
     }
 
+    companion object {
+        const val REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101
+        const val REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102
+    }
 }
