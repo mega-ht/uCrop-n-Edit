@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -82,6 +84,9 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
     private CheckBox mCheckBoxContrast;
     private CheckBox mCheckBoxSaturation;
     private CheckBox mCheckBoxSharpness;
+
+    private RadioGroup mRadioGroupTitlebarTextGravity;
+    private EditText mEditTextTitlebarTextSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +190,10 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         mCheckBoxContrast = findViewById(R.id.checkbox_contrast);
         mCheckBoxSaturation = findViewById(R.id.checkbox_saturation);
         mCheckBoxSharpness = findViewById(R.id.checkbox_sharpness);
+
+        mRadioGroupTitlebarTextGravity = findViewById(R.id.radio_group_titlebar_text_gravity_settings);
+
+        mEditTextTitlebarTextSize = findViewById(R.id.edit_text_toolbar_title_size);
 
         mRadioGroupAspectRatio.check(R.id.radio_dynamic);
         mEditTextRatioX.addTextChangedListener(mAspectRatioTextWatcher);
@@ -328,6 +337,24 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         options.setContrastEnabled(mCheckBoxContrast.isChecked());
         options.setSaturationEnabled(mCheckBoxSaturation.isChecked());
         options.setSharpnessEnabled(mCheckBoxSharpness.isChecked());
+
+        if(!mEditTextTitlebarTextSize.getText().toString().isEmpty()){
+            options.setToolbarTitleTextSize(Float.parseFloat(mEditTextTitlebarTextSize.getText().toString()));
+        }
+
+        switch (mRadioGroupTitlebarTextGravity.getCheckedRadioButtonId()) {
+            case R.id.radio_gravity_start:
+                options.setToolbarTitleTextGravity(Gravity.START);
+                break;
+            case R.id.radio_gravity_center:
+                options.setToolbarTitleTextGravity(Gravity.CENTER);
+                break;
+            case R.id.radio_gravity_end:
+                options.setToolbarTitleTextGravity(Gravity.END);
+                break;
+            default:
+                break;
+        }
 
         /*
         If you want to configure how gestures work for all UCropActivity tabs

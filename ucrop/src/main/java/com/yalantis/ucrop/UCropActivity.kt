@@ -39,6 +39,7 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.util.*
 
+
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
@@ -48,6 +49,10 @@ class UCropActivity : AppCompatActivity() {
     annotation class GestureTypes
 
     private var mToolbarTitle: String? = null
+    private var mToolbarGravity = DEFAULT_TOOLBAR_GRAVITY
+
+    // Toolbar title text size
+    private var mToolbarTextSize = DEFAULT_TOOLBAR_TEXT_SIZE
 
     // Enables dynamic coloring
     private var mToolbarColor = 0
@@ -67,6 +72,8 @@ class UCropActivity : AppCompatActivity() {
     private var mShowBottomControls = false
     private var mShowLoader = true
     private var mUCropView: UCropView? = null
+    private var mToolbarTextView: TextView? = null
+    private var mToolbarView: Toolbar? = null
     private var mGestureCropImageView: GestureCropImageView? = null
     private var mOverlayView: OverlayView? = null
     private var mWrapperStateAspectRatio: ViewGroup? = null
@@ -363,6 +370,12 @@ class UCropActivity : AppCompatActivity() {
             UCrop.Options.EXTRA_UCROP_COLOR_CONTROLS_WIDGET_ACTIVE,
             ContextCompat.getColor(this, R.color.ucrop_color_active_controls_color)
         )
+        mToolbarGravity = intent.getIntExtra(
+            UCrop.Options.EXTRA_UCROP_TITLE_GRAVITY_TOOLBAR,
+            Gravity.START)
+        mToolbarTextSize = intent.getFloatExtra(
+            UCrop.Options.EXTRA_UCROP_TITLE_SIZE_TOOLBAR,
+            20F)
         mToolbarWidgetColor = intent.getIntExtra(
             UCrop.Options.EXTRA_UCROP_WIDGET_COLOR_TOOLBAR,
             ContextCompat.getColor(this, R.color.ucrop_color_toolbar_widget)
@@ -434,21 +447,32 @@ class UCropActivity : AppCompatActivity() {
      */
     private fun setupAppBar() {
         setStatusBarColor(mStatusBarColor)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        mToolbarView = findViewById(R.id.toolbar)
 
         // Set all of the Toolbar coloring
-        toolbar.setBackgroundColor(mToolbarColor)
-        toolbar.setTitleTextColor(mToolbarWidgetColor)
-        val toolbarTitle = toolbar.findViewById<TextView>(R.id.toolbar_title)
-        toolbarTitle.setTextColor(mToolbarWidgetColor)
-        toolbarTitle.text = mToolbarTitle
+        mToolbarView!!.setBackgroundColor(mToolbarColor)
+        mToolbarView!!.setTitleTextColor(mToolbarWidgetColor)
+
+        mToolbarTextView = mToolbarView!!.findViewById(R.id.toolbar_title)
+        //Set the title size
+        mToolbarTextView!!.textSize = mToolbarTextSize
+        mToolbarTextView!!.setTextColor(mToolbarWidgetColor)
+        mToolbarTextView!!.text = mToolbarTitle
+
+        //Set the title alignment mode
+        val lp = Toolbar.LayoutParams(
+            Toolbar.LayoutParams.WRAP_CONTENT,
+            Toolbar.LayoutParams.WRAP_CONTENT
+        )
+        lp.gravity = mToolbarGravity
+        mToolbarTextView!!.layoutParams = lp
 
         // Color buttons inside the Toolbar
         val stateButtonDrawable = ContextCompat.getDrawable(this, mToolbarCancelDrawable)!!
             .mutate()
         stateButtonDrawable.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
-        toolbar.navigationIcon = stateButtonDrawable
-        setSupportActionBar(toolbar)
+        mToolbarView!!.navigationIcon = stateButtonDrawable
+        setSupportActionBar(mToolbarView)
         val actionBar = supportActionBar
         actionBar?.setDisplayShowTitleEnabled(false)
     }
@@ -1015,6 +1039,8 @@ class UCropActivity : AppCompatActivity() {
         private const val TABS_COUNT = 3
         private const val SCALE_WIDGET_SENSITIVITY_COEFFICIENT = 15000
         private const val ROTATE_WIDGET_SENSITIVITY_COEFFICIENT = 42
+        private const val DEFAULT_TOOLBAR_TEXT_SIZE = 14f
+        private const val DEFAULT_TOOLBAR_GRAVITY = Gravity.START
         private const val BRIGHTNESS_WIDGET_SENSITIVITY_COEFFICIENT = 3
         private const val CONTRAST_WIDGET_SENSITIVITY_COEFFICIENT = 4
         private const val SATURATION_WIDGET_SENSITIVITY_COEFFICIENT = 3

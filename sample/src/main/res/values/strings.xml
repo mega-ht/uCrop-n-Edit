@@ -1,54 +1,56 @@
 <resources>
 
-    <string name="app_name">uCrop\'n\'Edit</string>
+    <string name="app_name" translatable="false">uCrop\'n\'Edit</string>
 
-    <string name="label_sample">sample</string>
-    <string name="label_aspect_ratio">Aspect ratio</string>
-    <string name="label_dynamic">Dynamic</string>
-    <string name="label_image_source">Image source</string>
-    <string name="label_square">Square</string>
-    <string name="label_max_cropped_image_size">Max cropped image size</string>
-    <string name="label_compression_settings">Compression settings</string>
-    <string name="label_ui">UI</string>
-    <string name="label_edit">Edit</string>
-    <string name="label_width">Width</string>
-    <string name="label_height">Height</string>
-    <string name="label_resize_image_to_max_size">Resize image to max size</string>
-    <string name="label_hide_bottom_ui_controls">Hide bottom UI controls</string>
-    <string name="label_freestyle_crop">Freestyle crop</string>
-    <string name="label_select_picture">Select Picture</string>
-    <string name="label_brightness">Brightness</string>
-    <string name="label_contrast">Contrast</string>
-    <string name="label_saturation">Saturation</string>
-    <string name="label_sharpness">Sharpness</string>
-    <string name="label_cancel">Cancel</string>
-    <string name="label_ok">OK</string>
+    <string name="label_sample" translatable="false">sample</string>
+    <string name="label_aspect_ratio" translatable="false">Aspect ratio</string>
+    <string name="label_dynamic" translatable="false">Dynamic</string>
+    <string name="label_image_source" translatable="false">Image source</string>
+    <string name="label_square" translatable="false">Square</string>
+    <string name="label_max_cropped_image_size" translatable="false">Max cropped image size</string>
+    <string name="label_compression_settings" translatable="false">Compression settings</string>
+    <string name="label_ui" translatable="false">UI</string>
+    <string name="label_edit" translatable="false">Edit</string>
+    <string name="label_width" translatable="false">Width</string>
+    <string name="label_height" translatable="false">Height</string>
+    <string name="label_size" translatable="false">Size</string>
+    <string name="label_ui_titlebar_text_gravity" translatable="false">Titlebar text gravity</string>
+    <string name="label_resize_image_to_max_size" translatable="false">Resize image to max size</string>
+    <string name="label_hide_bottom_ui_controls" translatable="false">Hide bottom UI controls</string>
+    <string name="label_freestyle_crop" translatable="false">Freestyle crop</string>
+    <string name="label_select_picture" translatable="false">Select Picture</string>
+    <string name="label_brightness" translatable="false">Brightness</string>
+    <string name="label_contrast" translatable="false">Contrast</string>
+    <string name="label_saturation" translatable="false">Saturation</string>
+    <string name="label_sharpness" translatable="false">Sharpness</string>
+    <string name="label_cancel" translatable="false">Cancel</string>
+    <string name="label_ok" translatable="false">OK</string>
 
-    <string name="notification_image_saved">Image saved</string>
-    <string name="notification_image_saved_click_to_preview">Image saved. Click to preview.</string>
+    <string name="notification_image_saved" translatable="false">Image saved</string>
+    <string name="notification_image_saved_click_to_preview" translatable="false">Image saved. Click to preview.</string>
 
-    <string name="menu_download">Download</string>
+    <string name="menu_download" translatable="false">Download</string>
 
-    <string name="button_pick_amp_crop"><![CDATA[Pick & Crop]]></string>
-    <string name="button_crop_random_image">Crop random image</string>
+    <string name="button_pick_amp_crop" translatable="false"><![CDATA[Pick & Crop]]></string>
+    <string name="button_crop_random_image" translatable="false">Crop random image</string>
 
-    <string name="description_cropped_image">Cropped image</string>
+    <string name="description_cropped_image" translatable="false">Cropped image</string>
 
-    <string name="format_crop_result_d_d">Crop Result (%1$dx%2$d)</string>
-    <string name="format_quality_d">Quality: %d</string>
-    <string name="format_d_d_px">%1$dx%2$d px</string>
-    <string name="format_max_cropped_image_size">Max cropped image size cannot be less then %d</string>
-    <string name="format_max_cropped_image_size_resolution">Too big resolution</string>
+    <string name="format_crop_result_d_d" translatable="false">Crop Result (%1$dx%2$d)</string>
+    <string name="format_quality_d" translatable="false">Quality: %d</string>
+    <string name="format_d_d_px" translatable="false">%1$dx%2$d px</string>
+    <string name="format_max_cropped_image_size" translatable="false">Max cropped image size cannot be less then %d</string>
+    <string name="format_max_cropped_image_size_resolution" translatable="false">Too big resolution</string>
 
-    <string name="permission_title_rationale">Permission needed</string>
-    <string name="permission_read_storage_rationale">Storage read permission is needed to pick files.</string>
-    <string name="permission_write_storage_rationale">Storage write permission is needed to save the image.</string>
+    <string name="permission_title_rationale" translatable="false">Permission needed</string>
+    <string name="permission_read_storage_rationale" translatable="false">Storage read permission is needed to pick files.</string>
+    <string name="permission_write_storage_rationale" translatable="false">Storage write permission is needed to save the image.</string>
 
-    <string name="toast_cannot_retrieve_selected_image">Cannot retrieve selected image</string>
-    <string name="toast_cannot_retrieve_cropped_image">Cannot retrieve cropped image</string>
-    <string name="toast_unexpected_error">Unexpected error</string>
+    <string name="toast_cannot_retrieve_selected_image" translatable="false">Cannot retrieve selected image</string>
+    <string name="toast_cannot_retrieve_cropped_image" translatable="false">Cannot retrieve cropped image</string>
+    <string name="toast_unexpected_error" translatable="false">Unexpected error</string>
 
-    <string name="file_provider_authorities">com.yalantis.ucrop.provider</string>
-    <string name="channel_name">ucrop_chanel</string>
-    <string name="channel_description">ucrop result image</string>
+    <string name="file_provider_authorities" translatable="false">com.yalantis.ucrop.provider</string>
+    <string name="channel_name" translatable="false">ucrop_chanel</string>
+    <string name="channel_description" translatable="false">ucrop result image</string>
 </resources>

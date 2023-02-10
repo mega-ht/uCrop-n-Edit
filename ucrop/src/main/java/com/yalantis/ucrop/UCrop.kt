@@ -11,9 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.annotation.FloatRange
+import androidx.annotation.*
 import androidx.annotation.IntRange
 import com.yalantis.ucrop.model.AspectRatio
 import java.util.*
@@ -344,6 +342,21 @@ class UCrop private constructor(source: Uri, destination: Uri) {
         }
 
         /**
+         * @param gravity - desired text for Toolbar title alignment mode
+         * @see android.view.Gravity
+         */
+        fun setToolbarTitleTextGravity(gravity: Int) {
+            optionBundle.putInt(EXTRA_UCROP_TITLE_GRAVITY_TOOLBAR, gravity)
+        }
+
+        /**
+         * @param textSize - desired text for Toolbar title text size
+         */
+        fun setToolbarTitleTextSize(textSize: Float) {
+            optionBundle.putFloat(EXTRA_UCROP_TITLE_SIZE_TOOLBAR, textSize)
+        }
+
+        /**
          * @param color - desired resolved color of the toolbar
          */
         fun setToolbarColor(@ColorInt color: Int) {
@@ -529,6 +542,8 @@ class UCrop private constructor(source: Uri, destination: Uri) {
             const val EXTRA_UCROP_COLOR_CONTROLS_WIDGET_ACTIVE =
                 EXTRA_PREFIX + ".UcropColorControlsWidgetActive"
             const val EXTRA_UCROP_WIDGET_COLOR_TOOLBAR = EXTRA_PREFIX + ".UcropToolbarWidgetColor"
+            const val EXTRA_UCROP_TITLE_GRAVITY_TOOLBAR = "$EXTRA_PREFIX.UcropToolbarTitleGravity"
+            const val EXTRA_UCROP_TITLE_SIZE_TOOLBAR = "$EXTRA_PREFIX.UcropToolbarTitleSize"
             const val EXTRA_UCROP_TITLE_TEXT_TOOLBAR = EXTRA_PREFIX + ".UcropToolbarTitleText"
             const val EXTRA_UCROP_WIDGET_CANCEL_DRAWABLE =
                 EXTRA_PREFIX + ".UcropToolbarCancelDrawable"
