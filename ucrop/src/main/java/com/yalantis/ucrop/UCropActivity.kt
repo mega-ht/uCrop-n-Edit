@@ -372,7 +372,7 @@ class UCropActivity : AppCompatActivity() {
         )
         mToolbarGravity = intent.getIntExtra(
             UCrop.Options.EXTRA_UCROP_TITLE_GRAVITY_TOOLBAR,
-            Gravity.START)
+            Gravity.CENTER)
         mToolbarTextSize = intent.getFloatExtra(
             UCrop.Options.EXTRA_UCROP_TITLE_SIZE_TOOLBAR,
             20F)
