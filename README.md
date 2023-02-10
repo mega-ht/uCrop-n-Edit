@@ -5,7 +5,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 ## Features
 
-<a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images.
+<a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images. I added a few more things. You can see these in the changelog.
 
 <p align="center">
   <img src="preview.gif" width="320" height="560">
@@ -62,6 +62,8 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
         .start(context, activityResultLauncher)
     ```
 
+[Here](https://github.com/Frosch2010/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
+
 
 ### onActivityResult (is deprecated)
 
@@ -74,6 +76,8 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
         .withMaxResultSize(maxWidth, maxHeight)
         .start(context);
     ```
+    
+[Here](https://github.com/Frosch2010/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
 
 
 4. Override `onActivityResult` method and handle uCrop result.
