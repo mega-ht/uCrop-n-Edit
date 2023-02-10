@@ -1,6 +1,12 @@
 # UCrop Options:
 
-    val options = UCrop.Options()  
+    var uCrop = of(uri, Uri.fromFile(File(cacheDir, destinationFileName)))
+    val options = UCrop.Options()
+    
+    ... set all options here ...
+    
+    uCrop = uCrop.withOptions(options)
+    uCrop.start(this)
 
 ### Set image format:
 
