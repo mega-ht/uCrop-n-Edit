@@ -97,6 +97,11 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 ## Changelog
 
+**3.0.3**
+
+- transleted sample to kotlin
+- added option to set titlebar text gravity and size (https://github.com/Yalantis/uCrop/pull/856)
+
 **3.0.2**
 
 - downgraded gradle to 7.4 (Because jitpack.io does not support higher versions at the moment)
@@ -111,7 +116,7 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 - updated to newest gradle version
 - updated libarys to newest versions
 - added an AcivityResultLauncher for UCrop
-- fixed a bug mentioned in the <a href="https://github.com/Yalantis/uCrop">uCrop</a> pull requests (<a href="https://github.com/Yalantis/uCrop/pull/809">#809</a>)
+- fixed a bug mentioned in the <a href="https://github.com/Yalantis/uCrop">uCrop</a> pull requests (https://github.com/Yalantis/uCrop/pull/809)
 
 
 ## License
