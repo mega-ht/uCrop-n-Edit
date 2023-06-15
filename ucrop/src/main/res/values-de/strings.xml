@@ -7,4 +7,8 @@
     <string name="ucrop_rotate">Rotieren</string>
     <string name="ucrop_scale">Skalieren</string>
     <string name="ucrop_crop">Zuschneiden</string>
+    <string name="ucrop_brightness">Helligkeit</string>
+    <string name="ucrop_contrast">Kontrast</string>
+    <string name="ucrop_saturation">Sättigung</string>
+    <string name="ucrop_sharpness">Schärfe</string>
 </resources>
