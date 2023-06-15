@@ -1,9 +1,9 @@
-[![](https://jitpack.io/v/Frosch2010/uCrop-n-Edit.svg)](https://jitpack.io/#Frosch2010/uCrop-n-Edit)
+[![](https://jitpack.io/v/Frosch2010/uCrop-n-Edit.svg)](https://jitpack.io/#Frosch2010/uCrop-n-Edit) [![](https://jitpack.io/v/Frosch2010/uCrop-n-Edit/month.svg)](https://jitpack.io/#Frosch2010/uCrop-n-Edit)
 # uCrop'n'Edit - Image Cropping and Editing Library for Android
 
-This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a>, which is in turn a fork of <a href="https://github.com/Yalantis/uCrop">uCrop</a>. I fixed some bugs, updated the dependencies and gradle, and converted much of the code to Kotlin.
+This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a>, which is in turn a fork of <a href="https://github.com/Yalantis/uCrop">uCrop</a>. I fixed some bugs, updated the dependencies and gradle, and converted much of the code to Kotlin. Furthermore, I added the option to use an ActivityResultLauncher instead of onActivityResult which is deprecated. In addition, in the changelogs you can see all other features I added.
 
-## Features
+# Features
 
 <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images. I added a few more things. You can see these in the changelog.
 
@@ -11,7 +11,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
   <img src="preview.gif" width="320" height="560">
 </p>
 
-## Usage
+# Usage
 
 1. Include the library as a local library project in your build.gradle:
 
@@ -26,7 +26,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.2'
+	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.3'
 	}
     ```
 
@@ -95,11 +95,11 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 For more information see uCrop: <a href="https://github.com/Yalantis/uCrop#usage">Usage</a>
 
-## Feedback and Contributions
+# Feedback and Contributions
 
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
-## Changelog
+# Changelog
 
 **3.0.3**
 
@@ -123,7 +123,7 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 - fixed a bug mentioned in the <a href="https://github.com/Yalantis/uCrop">uCrop</a> pull requests (https://github.com/Yalantis/uCrop/pull/809)
 
 
-## License
+# License
 
 This software is licensed under the Apache License, Version 2.0. See the <a href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a> file for details.
 
