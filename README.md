@@ -106,7 +106,7 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 - updated dependencies
 - added Vietnamese localization (https://github.com/Yalantis/uCrop/pull/845)
 - updated French localization (https://github.com/Yalantis/uCrop/pull/838)
-- updated Italian localization (https://github.com/Yalantis/uCrop/pull/878/files)
+- updated Italian localization (https://github.com/Yalantis/uCrop/pull/878)
 - updated German localization
 
 **3.0.3**
