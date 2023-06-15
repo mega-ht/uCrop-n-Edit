@@ -26,7 +26,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.3'
+	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.4'
 	}
     ```
 
@@ -100,6 +100,14 @@ For more information see uCrop: <a href="https://github.com/Yalantis/uCrop#usage
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
 # Changelog
+
+**3.0.4**
+
+- updated dependencies
+- added Vietnamese localization (https://github.com/Yalantis/uCrop/pull/845)
+- updated French localization (https://github.com/Yalantis/uCrop/pull/838)
+- updated Italian localization (https://github.com/Yalantis/uCrop/pull/878/files)
+- updated German localization
 
 **3.0.3**
 
