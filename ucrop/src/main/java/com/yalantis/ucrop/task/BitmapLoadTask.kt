@@ -5,13 +5,11 @@ import android.graphics.*
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
-import androidx.annotation.NonNull
 import com.yalantis.ucrop.UCropHttpClientStore
 import com.yalantis.ucrop.callback.BitmapLoadCallback
 import com.yalantis.ucrop.model.ExifInfo
 import com.yalantis.ucrop.task.BitmapLoadTask.BitmapWorkerResult
 import com.yalantis.ucrop.util.BitmapLoadUtils
-import com.yalantis.ucrop.util.BitmapLoadUtils.close
 import okhttp3.Request
 import okhttp3.Response
 import okio.BufferedSource
@@ -61,7 +59,7 @@ class BitmapLoadTask(
     }
 
     @Deprecated("")
-    override fun doInBackground(vararg params: Void?): BitmapWorkerResult? {
+    override fun doInBackground(vararg params: Void?): BitmapWorkerResult {
         if (mInputUri == null) {
             return BitmapWorkerResult(NullPointerException("Input Uri cannot be null"))
         }
@@ -70,6 +68,8 @@ class BitmapLoadTask(
         } catch (e: NullPointerException) {
             return BitmapWorkerResult(e)
         } catch (e: IOException) {
+            return BitmapWorkerResult(e)
+        } catch (e: IllegalArgumentException) {
             return BitmapWorkerResult(e)
         }
         val options = BitmapFactory.Options()
@@ -129,31 +129,31 @@ class BitmapLoadTask(
         } else BitmapWorkerResult(decodeSampledBitmap, exifInfo)
     }
 
-    @Throws(NullPointerException::class, IOException::class)
+    @Throws(NullPointerException::class, IOException::class, IllegalArgumentException::class)
     private fun processInputUri() {
-        val inputUriScheme = mInputUri!!.scheme
-        Log.d(TAG, "Uri scheme: $inputUriScheme")
-        if ("http" == inputUriScheme || "https" == inputUriScheme) {
+        Log.d(TAG, "Uri scheme: " + mInputUri!!.scheme)
+        if (isDownloadUri(mInputUri!!)) {
             try {
                 downloadFile(mInputUri!!, mOutputUri)
             } catch (e: NullPointerException) {
                 Log.e(TAG, "Downloading failed", e)
                 throw e
-            } catch (e: IOException) {
+            } catch (e: IOException){
                 Log.e(TAG, "Downloading failed", e)
                 throw e
             }
-        } else if ("content" == inputUriScheme) {
+        } else if (isContentUri(mInputUri!!)) {
             try {
                 copyFile(mInputUri!!, mOutputUri)
             } catch (e: NullPointerException) {
                 Log.e(TAG, "Copying failed", e)
                 throw e
-            } catch (e: IOException) {
+            }catch (e: IOException){
                 Log.e(TAG, "Copying failed", e)
                 throw e
             }
-        } else if ("file" != inputUriScheme) {
+        } else if (!isFileUri(mInputUri!!)) {
+            val inputUriScheme = mInputUri!!.scheme
             Log.e(TAG, "Invalid Uri scheme $inputUriScheme")
             throw IllegalArgumentException("Invalid Uri scheme$inputUriScheme")
         }
@@ -169,14 +169,23 @@ class BitmapLoadTask(
         var outputStream: OutputStream? = null
         try {
             inputStream = mContext.contentResolver.openInputStream(inputUri)
-            outputStream = FileOutputStream(File(outputUri.path))
             if (inputStream == null) {
                 throw NullPointerException("InputStream for given input Uri is null")
             }
+
+            outputStream = if (isContentUri(outputUri)) {
+                mContext.contentResolver.openOutputStream(outputUri)
+            } else {
+
+                if(outputUri.path.isNullOrEmpty()) throw NullPointerException("Output Uri path is null")
+
+                FileOutputStream(File(outputUri.path!!))
+            }
+
             val buffer = ByteArray(1024)
             var length: Int
             while (inputStream.read(buffer).also { length = it } > 0) {
-                outputStream.write(buffer, 0, length)
+                outputStream!!.write(buffer, 0, length)
             }
         } finally {
             BitmapLoadUtils.close(outputStream)
@@ -208,10 +217,18 @@ class BitmapLoadTask(
             if (response != null) {
                 source = response.body!!.source()
             }
-            val outputStream = mContext.contentResolver.openOutputStream(outputUri)
+
+            val outputStream: OutputStream? = if (isContentUri(mOutputUri!!)) {
+                mContext.contentResolver.openOutputStream(outputUri)
+            } else {
+                if (outputUri.path.isNullOrEmpty()) throw NullPointerException("Output Uri path is null")
+                FileOutputStream(File(outputUri.path!!))
+            }
+
             if (outputStream != null) {
                 sink = outputStream.sink()
                 source?.readAll(sink)
+                outputStream.close()
             } else {
                 throw NullPointerException("OutputStream for given output Uri is null")
             }
@@ -250,6 +267,21 @@ class BitmapLoadTask(
             return true
         }
         return false
+    }
+
+    private fun isDownloadUri(uri: Uri): Boolean {
+        val schema = uri.scheme
+        return schema == "http" || schema == "https"
+    }
+
+    private fun isContentUri(uri: Uri): Boolean {
+        val schema = uri.scheme
+        return schema == "content"
+    }
+
+    private fun isFileUri(uri: Uri): Boolean {
+        val schema = uri.scheme
+        return schema == "file"
     }
 
     companion object {
