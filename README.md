@@ -26,7 +26,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.4'
+	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.5'
 	}
     ```
 
@@ -100,6 +100,11 @@ For more information see uCrop: <a href="https://github.com/Yalantis/uCrop#usage
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
 # Changelog
+
+**3.0.5**
+
+- added support for destination uri as a content provider uri (https://github.com/Yalantis/uCrop/pull/886)
+- updated dependencies and gradle
 
 **3.0.4**
 
