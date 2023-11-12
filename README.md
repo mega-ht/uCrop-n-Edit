@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/Frosch2010/uCrop-n-Edit.svg)](https://jitpack.io/#Frosch2010/uCrop-n-Edit) [![](https://jitpack.io/v/Frosch2010/uCrop-n-Edit/month.svg)](https://jitpack.io/#Frosch2010/uCrop-n-Edit)
+[![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit) [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit/month.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit)
 # uCrop'n'Edit - Image Cropping and Editing Library for Android
 
 This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a>, which is in turn a fork of <a href="https://github.com/Yalantis/uCrop">uCrop</a>. I fixed some bugs, updated the dependencies and gradle, and converted much of the code to Kotlin. Furthermore, I added the option to use an ActivityResultLauncher instead of onActivityResult which is deprecated. In addition, in the changelogs you can see all other features I added.
@@ -26,7 +26,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.Frosch2010:uCrop-n-Edit:3.0.5'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.5'
 	}
     ```
 
@@ -62,7 +62,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
         .start(context, activityResultLauncher)
     ```
 
-[Here](https://github.com/Frosch2010/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
+[Here](https://github.com/jens-muenker/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
 
 
 ### onActivityResult (is deprecated)
@@ -77,7 +77,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
         .start(context);
     ```
     
-[Here](https://github.com/Frosch2010/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
+[Here](https://github.com/jens-muenker/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
 
 
 4. Override `onActivityResult` method and handle uCrop result.
@@ -140,6 +140,19 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 This software is licensed under the Apache License, Version 2.0. See the <a href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a> file for details.
 
+    Copyright 2023, Jens Münker
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
 For <a href="https://github.com/Yalantis/uCrop">uCrop</a>:
 
