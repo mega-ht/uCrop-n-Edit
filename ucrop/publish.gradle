@@ -23,15 +23,11 @@ publishing {
     publications {
         release(MavenPublication) {
             afterEvaluate {
+                generateMetadataFileForReleasePublication.dependsOn androidSourcesJar
+
                 groupId PUBLISH_GROUP_ID
                 artifactId PUBLISH_ARTIFACT_ID
                 version PUBLISH_VERSION
-
-                if (project.plugins.findPlugin("com.android.library")) {
-                    from components.release
-                } else {
-                    from components.java
-                }
 
                 artifact androidSourcesJar
 
