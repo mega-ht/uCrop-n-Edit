@@ -35,6 +35,7 @@ import java.util.*
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
+@Suppress("NAME_SHADOWING")
 class SampleActivity : BaseActivity(), UCropFragmentCallback {
     private var mRadioGroupAspectRatio: RadioGroup? = null
     private var mRadioGroupCompressionSettings: RadioGroup? = null
@@ -88,7 +89,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable) {
-            if (s != null && !s.toString().trim { it <= ' ' }.isEmpty()) {
+            if (s.toString().trim { it <= ' ' }.isNotEmpty()) {
                 if (Integer.valueOf(s.toString()) < UCrop.MIN_SIZE) {
                     Toast.makeText(
                         this@SampleActivity,
@@ -140,26 +141,20 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         mRadioGroupAspectRatio!!.check(R.id.radio_dynamic)
         mEditTextRatioX!!.addTextChangedListener(mAspectRatioTextWatcher)
         mEditTextRatioY!!.addTextChangedListener(mAspectRatioTextWatcher)
-        mRadioGroupCompressionSettings!!.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId ->
-            mSeekBarQuality!!.setEnabled(
-                checkedId == R.id.radio_jpeg
-            )
-        })
+        mRadioGroupCompressionSettings!!.setOnCheckedChangeListener { _, checkedId ->
+            mSeekBarQuality!!.isEnabled = checkedId == R.id.radio_jpeg
+        }
         mRadioGroupCompressionSettings!!.check(R.id.radio_jpeg)
-        mSeekBarQuality!!.setProgress(UCropActivity.DEFAULT_COMPRESS_QUALITY)
-        mTextViewQuality!!.setText(
-            String.format(
-                getString(R.string.format_quality_d),
-                mSeekBarQuality!!.getProgress()
-            )
+        mSeekBarQuality!!.progress = UCropActivity.DEFAULT_COMPRESS_QUALITY
+        mTextViewQuality!!.text = String.format(
+            getString(R.string.format_quality_d),
+            mSeekBarQuality!!.progress
         )
         mSeekBarQuality!!.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                mTextViewQuality!!.setText(
-                    String.format(
-                        getString(R.string.format_quality_d),
-                        progress
-                    )
+                mTextViewQuality!!.text = String.format(
+                    getString(R.string.format_quality_d),
+                    progress
                 )
             }
 
@@ -452,7 +447,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         if (stateButtonDrawable != null) {
             stateButtonDrawable.mutate()
             stateButtonDrawable.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
-            toolbar!!.setNavigationIcon(stateButtonDrawable)
+            toolbar!!.navigationIcon = stateButtonDrawable
         }
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
@@ -528,7 +523,6 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
 
     companion object {
         private const val TAG = "SampleActivity"
-        private const val REQUEST_SELECT_PICTURE = 0x01
         private const val REQUEST_SELECT_PICTURE_FOR_FRAGMENT = 0x02
         private const val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
     }
