@@ -26,7 +26,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.5'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.6'
 	}
     ```
 
