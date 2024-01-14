@@ -64,37 +64,6 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 [Here](https://github.com/jens-muenker/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
 
-
-### onActivityResult (is deprecated)
-
-
-3. The uCrop configuration is created using the builder pattern.
-
-	```java
-    UCrop.of(sourceUri, destinationUri)
-        .withAspectRatio(16, 9)
-        .withMaxResultSize(maxWidth, maxHeight)
-        .start(context);
-    ```
-    
-[Here](https://github.com/jens-muenker/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
-
-
-4. Override `onActivityResult` method and handle uCrop result.
-
-    ```java
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
-            final Uri resultUri = UCrop.getOutput(data);
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            final Throwable cropError = UCrop.getError(data);
-        }
-    }
-    ```
-
-For more information see uCrop: <a href="https://github.com/Yalantis/uCrop#usage">Usage</a>
-
 # Feedback and Contributions
 
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.

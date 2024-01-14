@@ -1,6 +1,7 @@
 package com.yalantis.ucrop.sample
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
@@ -14,6 +15,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.Toolbar
@@ -26,9 +28,7 @@ import com.yalantis.ucrop.UCropActivity
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
-import com.yalantis.ucrop.model.AspectRatio
 import com.yalantis.ucrop.sample.ResultActivity.Companion.startWithUri
-import com.yalantis.ucrop.view.CropImageView
 import java.io.File
 import java.util.*
 
@@ -193,6 +193,27 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         mEditTextMaxWidth!!.addTextChangedListener(mMaxSizeTextWatcher)
     }
 
+    private val activityResultLauncherGalleryPick = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            val selectedUri = result.data!!.data
+            if (selectedUri != null) {
+                startCrop(selectedUri)
+            } else {
+                Toast.makeText(
+                    this@SampleActivity,
+                    R.string.toast_cannot_retrieve_selected_image,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            return@registerForActivityResult
+        }
+
+        if (result.resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(result.data!!)
+        }
+    }
+
     private fun pickFromGallery() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
             .setType("image/*")
@@ -201,12 +222,22 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
             val mimeTypes = arrayOf("image/jpeg", "image/png")
             intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
         }
-        startActivityForResult(
-            Intent.createChooser(
-                intent,
-                getString(R.string.label_select_picture)
-            ), requestMode
-        )
+
+        activityResultLauncherGalleryPick.launch(Intent.createChooser(
+            intent,
+            getString(R.string.label_select_picture)
+        ))
+    }
+
+    private val activityResultLauncherUCrop = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            handleCropResult(result.data!!)
+            return@registerForActivityResult
+        }
+
+        if (result.resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(result.data!!)
+        }
     }
 
     private fun startCrop(uri: Uri) {
@@ -221,7 +252,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         if (requestMode == REQUEST_SELECT_PICTURE_FOR_FRAGMENT) {       //if build variant = fragment
             setupFragment(uCrop)
         } else {                                                        // else start uCrop Activity
-            uCrop.start(this@SampleActivity)
+            uCrop.start(this@SampleActivity, activityResultLauncherUCrop)
         }
     }
 
