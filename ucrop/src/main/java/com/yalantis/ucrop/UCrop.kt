@@ -1,20 +1,19 @@
 package com.yalantis.ucrop
 
-import android.annotation.TargetApi
-import android.app.Activity
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap.CompressFormat
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.*
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
 import com.yalantis.ucrop.model.AspectRatio
-import java.util.*
+import java.util.Arrays
+import java.util.Locale
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -83,30 +82,6 @@ class UCrop private constructor(source: Uri, destination: Uri) {
         mCropOptionsBundle.putAll(options.optionBundle)
         return this
     }
-    /**
-     * Send the crop Intent from an Activity with a custom request code
-     *
-     * @param activity    Activity to receive result
-     * @param requestCode requestCode for result
-     */
-    /**
-     * Send the crop Intent from an Activity
-     *
-     * @param activity Activity to receive result
-     */
-    @JvmOverloads
-    fun start(activity: Activity, requestCode: Int = REQUEST_CROP) {
-        activity.startActivityForResult(getIntent(activity), requestCode)
-    }
-
-    /**
-     * Send the crop Intent from a Fragment
-     *
-     * @param fragment Fragment to receive result
-     */
-    fun start(context: Context, fragment: Fragment) {
-        start(context, fragment, REQUEST_CROP)
-    }
 
     /**
      * Launch the crop Intent from a ActivityResultLauncher
@@ -115,36 +90,6 @@ class UCrop private constructor(source: Uri, destination: Uri) {
      */
     fun start(context: Context, activityResult: ActivityResultLauncher<Intent>) {
         activityResult.launch(getIntent(context))
-    }
-
-    /**
-     * Send the crop Intent with a custom request code
-     *
-     * @param fragment    Fragment to receive result
-     * @param requestCode requestCode for result
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    fun start(context: Context, fragment: Fragment, requestCode: Int) {
-        fragment.startActivityForResult(getIntent(context), requestCode)
-    }
-    /**
-     * Send the crop Intent with a custom request code
-     *
-     * @param fragment    Fragment to receive result
-     * @param requestCode requestCode for result
-     */
-    /**
-     * Send the crop Intent from a support library Fragment
-     *
-     * @param fragment Fragment to receive result
-     */
-    @JvmOverloads
-    fun start(
-        context: Context,
-        fragment: androidx.fragment.app.Fragment,
-        requestCode: Int = REQUEST_CROP
-    ) {
-        fragment.startActivityForResult(getIntent(context), requestCode)
     }
 
     /**
