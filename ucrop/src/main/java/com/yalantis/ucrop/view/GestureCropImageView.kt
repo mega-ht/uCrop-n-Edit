@@ -9,11 +9,12 @@ import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import com.yalantis.ucrop.util.RotationGestureDetector
 import com.yalantis.ucrop.util.RotationGestureDetector.SimpleOnRotationGestureListener
+import kotlin.math.pow
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
-class GestureCropImageView : CropImageView {
+open class GestureCropImageView : CropImageView {
     private var mScaleDetector: ScaleGestureDetector? = null
     private var mRotateDetector: RotationGestureDetector? = null
     private var mGestureDetector: GestureDetector? = null
@@ -74,10 +75,8 @@ class GestureCropImageView : CropImageView {
      * to the max scale value with [.mDoubleTapScaleSteps] double taps.
      */
     protected val doubleTapTargetScale: Float
-        protected get() = currentScale * Math.pow(
-            (maxScale / minScale).toDouble(),
-            (1.0f / doubleTapScaleSteps).toDouble()
-        ).toFloat()
+        get() = currentScale * (maxScale / minScale).toDouble()
+            .pow((1.0f / doubleTapScaleSteps).toDouble()).toFloat()
 
     private fun setupGestureListeners() {
         mGestureDetector = GestureDetector(context, GestureListener(), null, true)
@@ -99,7 +98,7 @@ class GestureCropImageView : CropImageView {
         }
 
         override fun onScroll(
-            e1: MotionEvent,
+            e1: MotionEvent?,
             e2: MotionEvent,
             distanceX: Float,
             distanceY: Float

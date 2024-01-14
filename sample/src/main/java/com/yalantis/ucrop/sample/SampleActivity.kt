@@ -1,6 +1,7 @@
 package com.yalantis.ucrop.sample
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
@@ -14,6 +15,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.Toolbar
@@ -26,15 +28,14 @@ import com.yalantis.ucrop.UCropActivity
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
-import com.yalantis.ucrop.model.AspectRatio
 import com.yalantis.ucrop.sample.ResultActivity.Companion.startWithUri
-import com.yalantis.ucrop.view.CropImageView
 import java.io.File
 import java.util.*
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
+@Suppress("NAME_SHADOWING")
 class SampleActivity : BaseActivity(), UCropFragmentCallback {
     private var mRadioGroupAspectRatio: RadioGroup? = null
     private var mRadioGroupCompressionSettings: RadioGroup? = null
@@ -76,29 +77,6 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         setupUI()
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if (requestCode == requestMode) {
-                val selectedUri = data!!.data
-                if (selectedUri != null) {
-                    startCrop(selectedUri)
-                } else {
-                    Toast.makeText(
-                        this@SampleActivity,
-                        R.string.toast_cannot_retrieve_selected_image,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else if (requestCode == UCrop.REQUEST_CROP) {
-                handleCropResult(data!!)
-            }
-        }
-        if (resultCode == UCrop.RESULT_ERROR) {
-            handleCropError(data!!)
-        }
-    }
-
     private val mAspectRatioTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             mRadioGroupAspectRatio!!.clearCheck()
@@ -111,7 +89,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable) {
-            if (s != null && !s.toString().trim { it <= ' ' }.isEmpty()) {
+            if (s.toString().trim { it <= ' ' }.isNotEmpty()) {
                 if (Integer.valueOf(s.toString()) < UCrop.MIN_SIZE) {
                     Toast.makeText(
                         this@SampleActivity,
@@ -163,26 +141,20 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         mRadioGroupAspectRatio!!.check(R.id.radio_dynamic)
         mEditTextRatioX!!.addTextChangedListener(mAspectRatioTextWatcher)
         mEditTextRatioY!!.addTextChangedListener(mAspectRatioTextWatcher)
-        mRadioGroupCompressionSettings!!.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId ->
-            mSeekBarQuality!!.setEnabled(
-                checkedId == R.id.radio_jpeg
-            )
-        })
+        mRadioGroupCompressionSettings!!.setOnCheckedChangeListener { _, checkedId ->
+            mSeekBarQuality!!.isEnabled = checkedId == R.id.radio_jpeg
+        }
         mRadioGroupCompressionSettings!!.check(R.id.radio_jpeg)
-        mSeekBarQuality!!.setProgress(UCropActivity.DEFAULT_COMPRESS_QUALITY)
-        mTextViewQuality!!.setText(
-            String.format(
-                getString(R.string.format_quality_d),
-                mSeekBarQuality!!.getProgress()
-            )
+        mSeekBarQuality!!.progress = UCropActivity.DEFAULT_COMPRESS_QUALITY
+        mTextViewQuality!!.text = String.format(
+            getString(R.string.format_quality_d),
+            mSeekBarQuality!!.progress
         )
         mSeekBarQuality!!.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                mTextViewQuality!!.setText(
-                    String.format(
-                        getString(R.string.format_quality_d),
-                        progress
-                    )
+                mTextViewQuality!!.text = String.format(
+                    getString(R.string.format_quality_d),
+                    progress
                 )
             }
 
@@ -193,6 +165,27 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         mEditTextMaxWidth!!.addTextChangedListener(mMaxSizeTextWatcher)
     }
 
+    private val activityResultLauncherGalleryPick = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            val selectedUri = result.data!!.data
+            if (selectedUri != null) {
+                startCrop(selectedUri)
+            } else {
+                Toast.makeText(
+                    this@SampleActivity,
+                    R.string.toast_cannot_retrieve_selected_image,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            return@registerForActivityResult
+        }
+
+        if (result.resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(result.data!!)
+        }
+    }
+
     private fun pickFromGallery() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
             .setType("image/*")
@@ -201,12 +194,22 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
             val mimeTypes = arrayOf("image/jpeg", "image/png")
             intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
         }
-        startActivityForResult(
-            Intent.createChooser(
-                intent,
-                getString(R.string.label_select_picture)
-            ), requestMode
-        )
+
+        activityResultLauncherGalleryPick.launch(Intent.createChooser(
+            intent,
+            getString(R.string.label_select_picture)
+        ))
+    }
+
+    private val activityResultLauncherUCrop = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            handleCropResult(result.data!!)
+            return@registerForActivityResult
+        }
+
+        if (result.resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(result.data!!)
+        }
     }
 
     private fun startCrop(uri: Uri) {
@@ -221,7 +224,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         if (requestMode == REQUEST_SELECT_PICTURE_FOR_FRAGMENT) {       //if build variant = fragment
             setupFragment(uCrop)
         } else {                                                        // else start uCrop Activity
-            uCrop.start(this@SampleActivity)
+            uCrop.start(this@SampleActivity, activityResultLauncherUCrop)
         }
     }
 
@@ -444,7 +447,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         if (stateButtonDrawable != null) {
             stateButtonDrawable.mutate()
             stateButtonDrawable.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
-            toolbar!!.setNavigationIcon(stateButtonDrawable)
+            toolbar!!.navigationIcon = stateButtonDrawable
         }
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
@@ -520,7 +523,6 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
 
     companion object {
         private const val TAG = "SampleActivity"
-        private const val REQUEST_SELECT_PICTURE = 0x01
         private const val REQUEST_SELECT_PICTURE_FOR_FRAGMENT = 0x02
         private const val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
     }
