@@ -76,29 +76,6 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         setupUI()
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if (requestCode == requestMode) {
-                val selectedUri = data!!.data
-                if (selectedUri != null) {
-                    startCrop(selectedUri)
-                } else {
-                    Toast.makeText(
-                        this@SampleActivity,
-                        R.string.toast_cannot_retrieve_selected_image,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else if (requestCode == UCrop.REQUEST_CROP) {
-                handleCropResult(data!!)
-            }
-        }
-        if (resultCode == UCrop.RESULT_ERROR) {
-            handleCropError(data!!)
-        }
-    }
-
     private val mAspectRatioTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             mRadioGroupAspectRatio!!.clearCheck()
