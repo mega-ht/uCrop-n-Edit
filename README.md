@@ -70,6 +70,11 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 # Changelog
 
+**3.0.6**
+
+- removed onActivityResult (#6)
+- updated dependencies and gradle (#3)
+
 **3.0.5**
 
 - added support for destination uri as a content provider uri (https://github.com/Yalantis/uCrop/pull/886)
