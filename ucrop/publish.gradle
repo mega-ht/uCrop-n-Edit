@@ -1,5 +1,4 @@
 apply plugin: 'maven-publish'
-apply plugin: 'signing'
 
 tasks.register('androidSourcesJar', Jar) {
     archiveClassifier.set('sources')
@@ -12,59 +11,47 @@ tasks.register('androidSourcesJar', Jar) {
     }
 }
 
-artifacts {
-    archives androidSourcesJar
-}
-
 group = PUBLISH_GROUP_ID
 version = PUBLISH_VERSION
 
 publishing {
     publications {
         release(MavenPublication) {
+            generateMetadataFileForReleasePublication.dependsOn androidSourcesJar
+
+            groupId PUBLISH_GROUP_ID
+            artifactId PUBLISH_ARTIFACT_ID
+            version PUBLISH_VERSION
+
             afterEvaluate {
-                generateMetadataFileForReleasePublication.dependsOn androidSourcesJar
+                from components.release
+            }
 
-                groupId PUBLISH_GROUP_ID
-                artifactId PUBLISH_ARTIFACT_ID
-                version PUBLISH_VERSION
+            pom {
+                name = PUBLISH_ARTIFACT_ID
+                description = 'Image Cropping + Editing Library for Android'
+                url = 'https://github.com/jens-muenker/uCrop-n-Edit'
 
-                artifact androidSourcesJar
-
-                pom {
-                    name = PUBLISH_ARTIFACT_ID
-                    description = 'Image Cropping + Editing Library for Android'
-                    url = 'https://github.com/jens-muenker/uCrop-n-Edit'
-
-                    licenses {
-                        license {
-                            name = 'uCrop\'n\'Edit License'
-                            url = 'https://github.com/jens-muenker/uCrop-n-Edit'
-                        }
+                licenses {
+                    license {
+                        name = 'uCrop\'n\'Edit License'
+                        url = 'https://github.com/jens-muenker/uCrop-n-Edit'
                     }
+                }
 
-                    developers {
-                        developer {
-                            name = 'Martin Anderson'
-                            email = 'martins.andersons@hotmail.com'
-                        }
+                developers {
+                    developer {
+                        name = 'Martin Anderson'
+                        email = 'martins.andersons@hotmail.com'
                     }
+                }
 
-                    scm {
-                        connection = 'scm:git:github.com/jens-muenker/uCrop-n-Edit.git'
-                        developerConnection = 'scm:git:ssh://github.com/jens-muenker/uCrop-n-Edit.git'
-                        url = 'https://github.com/jens-muenker/uCrop-n-Edit/'
-                    }
+                scm {
+                    connection = 'scm:git:github.com/jens-muenker/uCrop-n-Edit.git'
+                    developerConnection = 'scm:git:ssh://github.com/jens-muenker/uCrop-n-Edit.git'
+                    url = 'https://github.com/jens-muenker/uCrop-n-Edit/'
                 }
             }
         }
     }
 }
-
-/*signing {
-    useInMemoryPgpKeys(
-            rootProject.ext["signing.key"],
-            rootProject.ext["signing.password"],
-    )
-    sign publishing.publications
-}*/

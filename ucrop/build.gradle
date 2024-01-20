@@ -18,6 +18,10 @@ android {
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
+
+        aarMetadata {
+            minCompileSdk = 14
+        }
     }
     buildTypes {
         release {
