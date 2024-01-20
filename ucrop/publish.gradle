@@ -49,7 +49,7 @@ publishing {
                 scm {
                     connection = 'scm:git:github.com/jens-muenker/uCrop-n-Edit.git'
                     developerConnection = 'scm:git:ssh://github.com/jens-muenker/uCrop-n-Edit.git'
-                    url = 'https://github.com/jens-muenker/uCrop-n-Edit/'
+                    url = 'https://github.com/jens-muenker/uCrop-n-Edit/tree/master'
                 }
             }
         }

@@ -72,8 +72,8 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 **3.0.6**
 
-- removed onActivityResult (#6)
-- updated dependencies and gradle (#3)
+- removed onActivityResult (https://github.com/jens-muenker/uCrop-n-Edit/issues/6)
+- updated dependencies and gradle (https://github.com/jens-muenker/uCrop-n-Edit/issues/3)
 
 **3.0.5**
 
