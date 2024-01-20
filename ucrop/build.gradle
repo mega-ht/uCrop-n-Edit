@@ -14,6 +14,7 @@ android {
         minSdkVersion 14
         targetSdk 34
 
+        consumerProguardFiles 'proguard-rules.pro'
         vectorDrawables.useSupportLibrary = true
 
         renderscriptTargetApi 18
