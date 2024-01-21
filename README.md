@@ -5,14 +5,9 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 # Features
 
-<a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images. I added a few more things. You can see these in the changelog.
+<a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images. I updated everything and added a few things. You can see all changes in the changelog.
 
-<p align="center">
-	<img src="preview.gif" width="320" height="560"/>
-</p>
-
-
-# Customization
+<img align="right" src="preview.gif" width="150" height="280"/>
 
 * image compression format (e.g. PNG, JPEG), compression
 * image compression quality [0 - 100]. PNG which is lossless, will ignore the quality setting.
@@ -24,12 +19,6 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 * choose whether you want rectangle or oval(`options.setCircleDimmedLayer(true)`) crop area
 * the UI colors (Toolbar, StatusBar, active widget state)
 * and more...
-
-# Compatibility
-
-  * Library - Android ICS 4.0+ (API 14)
-  * Sample - Android ICS 4.0+ (API 14)
-  * CPU - armeabi armeabi-v7a x86 x86_64 arm64-v8a (for versions >= 2.1.2)
 
 # Usage
 
@@ -83,6 +72,12 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
     ```
 
 [Here](https://github.com/jens-muenker/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
+
+# Compatibility
+
+  * Library - Android ICS 4.0+ (API 14)
+  * Sample - Android ICS 4.0+ (API 14)
+  * CPU - armeabi armeabi-v7a x86 x86_64 arm64-v8a (for versions >= 2.1.2)
 
 # Feedback and Contributions
 
