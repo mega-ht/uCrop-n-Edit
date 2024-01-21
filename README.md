@@ -8,8 +8,28 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images. I added a few more things. You can see these in the changelog.
 
 <p align="center">
-  <img src="preview.gif" width="320" height="560">
+	<img src="preview.gif" width="320" height="560"/>
 </p>
+
+
+# Customization
+
+* image compression format (e.g. PNG, JPEG), compression
+* image compression quality [0 - 100]. PNG which is lossless, will ignore the quality setting.
+* change Brightness, Contrast, Saturation, and Sharpness of images
+* whether all gestures are enabled simultaneously
+* maximum size for Bitmap that is decoded from source Uri and used within crop view. If you want to override the default behaviour.
+* toggle whether to show crop frame/guidelines
+* setup color/width/count of crop frame/rows/columns
+* choose whether you want rectangle or oval(`options.setCircleDimmedLayer(true)`) crop area
+* the UI colors (Toolbar, StatusBar, active widget state)
+* and more...
+
+# Compatibility
+
+  * Library - Android ICS 4.0+ (API 14)
+  * Sample - Android ICS 4.0+ (API 14)
+  * CPU - armeabi armeabi-v7a x86 x86_64 arm64-v8a (for versions >= 2.1.2)
 
 # Usage
 
