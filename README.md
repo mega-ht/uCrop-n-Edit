@@ -75,8 +75,8 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 # Compatibility
 
-  * Library - Android ICS 4.0+ (API 14)
-  * Sample - Android ICS 4.0+ (API 14)
+  * Library - Android ICS 4.0+ (API 14) ( java >= 21 ; gradle >= 8.5 )
+  * Sample - Android ICS 4.0+ (API 14) ( java >= 21 ; gradle >= 8.5 )
   * CPU - armeabi armeabi-v7a x86 x86_64 arm64-v8a (for versions >= 2.1.2)
 
 # Feedback and Contributions
