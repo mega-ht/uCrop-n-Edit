@@ -11,9 +11,6 @@ tasks.register('androidSourcesJar', Jar) {
     }
 }
 
-group = PUBLISH_GROUP_ID
-version = PUBLISH_VERSION
-
 publishing {
     publications {
         release(MavenPublication) {
@@ -35,7 +32,7 @@ publishing {
                 licenses {
                     license {
                         name = 'uCrop\'n\'Edit License'
-                        url = 'https://github.com/jens-muenker/uCrop-n-Edit'
+                        url = 'https://github.com/jens-muenker/uCrop-n-Edit#license'
                     }
                 }
 
