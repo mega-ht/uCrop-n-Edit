@@ -26,7 +26,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.6'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.7'
 	}
     ```
 
@@ -69,6 +69,14 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
 # Changelog
+
+**3.0.7**
+
+- added bundle proguard rules in AAR (https://github.com/Yalantis/uCrop/pull/881)
+- updated CImg to 3.4.0
+- set minSdkVersion to 21
+- removed support for armeabi
+- updated dependencies and gradle
 
 **3.0.6**
 

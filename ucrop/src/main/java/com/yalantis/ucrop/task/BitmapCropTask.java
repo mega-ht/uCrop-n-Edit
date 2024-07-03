@@ -35,6 +35,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import kotlin.jvm.JvmStatic;
+
 /**
  * Crops part of image that fills the crop bounds.
  * <p/>
@@ -249,9 +251,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
                 || mCurrentAngle != 0;
     }
 
-    @SuppressWarnings("JniMissingFunction")
-    native public static boolean
-    cropCImg(String inputPath, String outputPath,
+    native public static boolean cropCImg(String inputPath, String outputPath,
              int left, int top, int width, int height,
              float angle, float resizeScale,
              int format, int quality,
