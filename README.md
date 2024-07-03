@@ -75,15 +75,23 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 # Compatibility
 
-  * Library - Android ICS 4.0+ (API 14) ( java >= 21 ; gradle >= 8.5 )
-  * Sample - Android ICS 4.0+ (API 14) ( java >= 21 ; gradle >= 8.5 )
-  * CPU - armeabi armeabi-v7a x86 x86_64 arm64-v8a (for versions >= 2.1.2)
+  * Library - Android ICS 5.0+ (API 21) ( java >= 21 ; gradle >= 8.5 )
+  * Sample - Android ICS 5.0+ (API 21) ( java >= 21 ; gradle >= 8.5 )
+  * CPU - armeabi-v7a x86 x86_64 arm64-v8a
 
 # Feedback and Contributions
 
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
 # Changelog
+
+**3.0.7**
+
+- added bundle proguard rules in AAR (https://github.com/Yalantis/uCrop/pull/881)
+- updated CImg to 3.4.0
+- set minSdkVersion to 21
+- removed support for armeabi
+- updated dependencies and gradle
 
 **3.0.6**
 
