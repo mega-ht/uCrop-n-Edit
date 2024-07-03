@@ -362,7 +362,7 @@ open class CropImageView @JvmOverloads constructor(
      * This method checks whether current image fills the crop bounds.
      */
     protected val isImageWrapCropBounds: Boolean
-        protected get() = isImageWrapCropBounds(mCurrentImageCorners)
+        get() = isImageWrapCropBounds(mCurrentImageCorners)
 
     /**
      * This methods checks whether a rectangle that is represented as 4 corner points (8 floats)

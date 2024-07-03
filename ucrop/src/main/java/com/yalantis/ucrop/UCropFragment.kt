@@ -13,7 +13,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.annotation.IntDef
@@ -34,13 +38,11 @@ import com.yalantis.ucrop.view.UCropView
 import com.yalantis.ucrop.view.widget.AspectRatioTextView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView.ScrollingListener
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-import java.util.*
+import java.util.Locale
 
 class UCropFragment : Fragment() {
     @IntDef(NONE, SCALE, ROTATE, ALL)
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(AnnotationRetention.SOURCE)
     annotation class GestureTypes
 
     private var callback: UCropFragmentCallback? = null

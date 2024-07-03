@@ -1,11 +1,9 @@
 package com.yalantis.ucrop.view.widget
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -16,7 +14,15 @@ import com.yalantis.ucrop.R
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
-class HorizontalProgressWheelView : View {
+class HorizontalProgressWheelView @JvmOverloads constructor(
+    context: Context?,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(
+    context,
+    attrs,
+    defStyleAttr
+) {
     private val mCanvasClipBounds = Rect()
     private var mScrollingListener: ScrollingListener? = null
     private var mLastTouchedPosition = 0f
@@ -29,22 +35,8 @@ class HorizontalProgressWheelView : View {
     private var mTotalScrollDistance = 0f
     private var mMiddleLineColor = 0
 
-    @JvmOverloads
-    constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(
-        context,
-        attrs,
-        defStyleAttr
-    ) {
+    init {
         init()
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context?,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
-    ) : super(context, attrs, defStyleAttr, defStyleRes) {
     }
 
     fun setScrollingListener(scrollingListener: ScrollingListener?) {

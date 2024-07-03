@@ -52,7 +52,7 @@ class ResultActivity : BaseActivity() {
         }
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(File(intent.data!!.path).absolutePath, options)
+        BitmapFactory.decodeFile(File(intent.data!!.path!!).absolutePath, options)
         setSupportActionBar(findViewById<View>(R.id.toolbar) as Toolbar)
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -171,7 +171,7 @@ class ResultActivity : BaseActivity() {
         val notificationManager = this
             .getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationBuilder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager?.createNotificationChannel(createChannel())
+            notificationManager.createNotificationChannel(createChannel())
             NotificationCompat.Builder(this, CHANNEL_ID)
         } else {
             NotificationCompat.Builder(this)
@@ -182,7 +182,8 @@ class ResultActivity : BaseActivity() {
             .setTicker(getString(R.string.notification_image_saved))
             .setSmallIcon(R.drawable.ic_done)
             .setOngoing(false)
-            .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+            .setContentIntent(PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_IMMUTABLE))
             .setAutoCancel(true)
         notificationManager.notify(DOWNLOAD_NOTIFICATION_ID_DONE, notificationBuilder.build())
     }

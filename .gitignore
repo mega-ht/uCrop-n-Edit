@@ -48,3 +48,4 @@ captures/
 .DS_Store
 private_key_sender.asc
 public_key_sender.asc
+/ucrop/src/main/jniLibs/obj/

@@ -1,19 +1,25 @@
 package com.yalantis.ucrop.util
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Point
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
 import android.view.Display
 import android.view.WindowManager
-import androidx.annotation.NonNull
 import androidx.exifinterface.media.ExifInterface
 import com.yalantis.ucrop.callback.BitmapLoadCallback
 import com.yalantis.ucrop.task.BitmapLoadTask
 import com.yalantis.ucrop.util.EglUtils.maxTextureSize
 import java.io.Closeable
 import java.io.IOException
+import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -125,7 +131,7 @@ object BitmapLoadUtils {
      */
     @JvmStatic
     fun calculateMaxBitmapSize(context: Context): Int {
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
         val display: Display
         val width: Int
         val height: Int
@@ -139,26 +145,26 @@ object BitmapLoadUtils {
 
         // Twice the device screen diagonal as default
         var maxBitmapSize =
-            Math.sqrt(Math.pow(width.toDouble(), 2.0) + Math.pow(height.toDouble(), 2.0)).toInt()
+            sqrt(width.toDouble().pow(2.0) + height.toDouble().pow(2.0)).toInt()
 
         // Check for max texture size via Canvas
         val canvas = Canvas()
-        val maxCanvasSize = Math.min(canvas.maximumBitmapWidth, canvas.maximumBitmapHeight)
+        val maxCanvasSize = min(canvas.maximumBitmapWidth, canvas.maximumBitmapHeight)
         if (maxCanvasSize > 0) {
-            maxBitmapSize = Math.min(maxBitmapSize, maxCanvasSize)
+            maxBitmapSize = min(maxBitmapSize, maxCanvasSize)
         }
 
         // Check for max texture size via GL
         val maxTextureSize = maxTextureSize
         if (maxTextureSize > 0) {
-            maxBitmapSize = Math.min(maxBitmapSize, maxTextureSize)
+            maxBitmapSize = min(maxBitmapSize, maxTextureSize)
         }
         Log.d(TAG, "maxBitmapSize: $maxBitmapSize")
         return maxBitmapSize
     }
 
     fun close(c: Closeable?) {
-        if (c != null && c is Closeable) { // java.lang.IncompatibleClassChangeError: interface not implemented
+        if (c != null) { // java.lang.IncompatibleClassChangeError: interface not implemented
             try {
                 c.close()
             } catch (e: IOException) {

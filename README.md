@@ -97,6 +97,7 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 - removed onActivityResult (https://github.com/jens-muenker/uCrop-n-Edit/issues/6)
 - updated dependencies and gradle (https://github.com/jens-muenker/uCrop-n-Edit/issues/3)
+- set sourceCompatibility and targetCompatibility to java version 21
 
 **3.0.5**
 

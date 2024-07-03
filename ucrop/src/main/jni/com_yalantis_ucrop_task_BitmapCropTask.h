@@ -13,8 +13,9 @@ extern "C" {
 * Method:    cropCImg
 * Signature: (Ljava/lang/String;Ljava/lang/String;IIIIF)Z
 */
-JNIEXPORT jboolean JNICALL Java_com_yalantis_ucrop_task_BitmapCropTask_cropCImg
-(JNIEnv *, jobject, jstring, jstring, jint, jint, jint, jint, jfloat, jfloat, jint, jint, jint, jint);
+JNIEXPORT jboolean
+extern "C" jboolean Java_com_yalantis_ucrop_task_BitmapCropTask_cropCImg
+(JNIEnv *, jclass clazz, jstring, jstring, jint, jint, jint, jint, jfloat, jfloat, jint, jint, jint, jint);
 
 #ifdef __cplusplus
 }
