@@ -1,20 +1,28 @@
 package com.yalantis.ucrop.sample
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.drawable.Animatable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.ScrollView
+import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
@@ -30,7 +38,9 @@ import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
 import com.yalantis.ucrop.sample.ResultActivity.Companion.startWithUri
 import java.io.File
-import java.util.*
+import java.util.Locale
+import java.util.Objects
+import java.util.Random
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -190,10 +200,8 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
             .setType("image/*")
             .addCategory(Intent.CATEGORY_OPENABLE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val mimeTypes = arrayOf("image/jpeg", "image/png")
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-        }
+        val mimeTypes = arrayOf("image/jpeg", "image/png")
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
 
         activityResultLauncherGalleryPick.launch(Intent.createChooser(
             intent,
@@ -437,7 +445,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         // Set all of the Toolbar coloring
         toolbar!!.setBackgroundColor(mToolbarColor)
         toolbar!!.setTitleTextColor(mToolbarWidgetColor)
-        toolbar!!.setVisibility(View.VISIBLE)
+        toolbar!!.visibility = View.VISIBLE
         val toolbarTitle = toolbar!!.findViewById<TextView>(R.id.toolbar_title)
         toolbarTitle.setTextColor(mToolbarWidgetColor)
         toolbarTitle.text = mToolbarTitle
@@ -459,14 +467,11 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
      *
      * @param color - status-bar color
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setStatusBarColor(@ColorInt color: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = window
-            if (window != null) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                window.statusBarColor = color
-            }
+        val window = window
+        if (window != null) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = color
         }
     }
 

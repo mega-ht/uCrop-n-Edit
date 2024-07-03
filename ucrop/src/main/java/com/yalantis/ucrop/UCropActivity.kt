@@ -1,18 +1,26 @@
 package com.yalantis.ucrop
 
-import android.annotation.TargetApi
 import android.content.Intent
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.PorterDuff
 import android.graphics.drawable.Animatable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
@@ -35,9 +43,7 @@ import com.yalantis.ucrop.view.UCropView
 import com.yalantis.ucrop.view.widget.AspectRatioTextView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView.ScrollingListener
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-import java.util.*
+import java.util.Locale
 
 
 /**
@@ -45,7 +51,7 @@ import java.util.*
  */
 class UCropActivity : AppCompatActivity() {
     @IntDef(NONE, SCALE, ROTATE, ALL)
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(AnnotationRetention.SOURCE)
     annotation class GestureTypes
 
     private var mToolbarTitle: String? = null
@@ -346,7 +352,7 @@ class UCropActivity : AppCompatActivity() {
                 true
             )
         ) View.VISIBLE else View.GONE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && getIntent().getBooleanExtra(
+        if (getIntent().getBooleanExtra(
                 UCrop.Options.EXTRA_SHARPNESS,
                 true
             )
@@ -594,14 +600,11 @@ class UCropActivity : AppCompatActivity() {
      *
      * @param color - status-bar color
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setStatusBarColor(@ColorInt color: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = window
-            if (window != null) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                window.statusBarColor = color
-            }
+        val window = window
+        if (window != null) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = color
         }
     }
 
@@ -610,7 +613,7 @@ class UCropActivity : AppCompatActivity() {
             intent.getIntExtra(UCrop.Options.EXTRA_ASPECT_RATIO_SELECTED_BY_DEFAULT, 0)
         var aspectRatioList =
             intent.getParcelableArrayListExtra<AspectRatio?>(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS)
-        if (aspectRatioList == null || aspectRatioList.isEmpty()) {
+        if (aspectRatioList.isNullOrEmpty()) {
             aspectRationSelectedByDefault = 2
             aspectRatioList = ArrayList()
             aspectRatioList.add(AspectRatio(null, 1f, 1f))

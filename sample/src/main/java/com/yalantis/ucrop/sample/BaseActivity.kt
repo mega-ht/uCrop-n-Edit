@@ -29,7 +29,7 @@ open class BaseActivity : AppCompatActivity() {
     protected fun requestPermission(permission: String, rationale: String?, requestCode: Int) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             showAlertDialog(getString(R.string.permission_title_rationale), rationale,
-                { dialog, which ->
+                { _, _ ->
                     ActivityCompat.requestPermissions(
                         this@BaseActivity,
                         arrayOf(permission),

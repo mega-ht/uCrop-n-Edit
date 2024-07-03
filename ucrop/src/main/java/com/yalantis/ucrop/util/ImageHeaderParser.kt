@@ -42,11 +42,7 @@ import java.nio.charset.Charset
  * A class for parsing the exif orientation from an image header.
  */
 class ImageHeaderParser(`is`: InputStream) {
-    private val reader: Reader
-
-    init {
-        reader = StreamReader(`is`)
-    }
+    private val reader: Reader = StreamReader(`is`)
 
     /**
      * Parse the orientation from the image header. If it doesn't handle this image type (or this is
@@ -179,16 +175,16 @@ class ImageHeaderParser(`is`: InputStream) {
     }
 
     private class RandomAccessReader(data: ByteArray?, length: Int) {
-        private val data: ByteBuffer
-
-        init {
-            this.data = ByteBuffer.wrap(data)
+        private val data: ByteBuffer = data?.let {
+            ByteBuffer.wrap(it)
                 .order(ByteOrder.BIG_ENDIAN)
-                .limit(length) as ByteBuffer
-        }
+                .limit(length)
+        } as ByteBuffer
 
         fun order(byteOrder: ByteOrder?) {
-            data.order(byteOrder)
+            if (byteOrder != null) {
+                data.order(byteOrder)
+            }
         }
 
         fun length(): Int {

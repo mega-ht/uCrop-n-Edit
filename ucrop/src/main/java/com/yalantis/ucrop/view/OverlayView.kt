@@ -2,8 +2,11 @@ package com.yalantis.ucrop.view
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.*
-import android.os.Build
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Region
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -13,8 +16,8 @@ import androidx.annotation.IntRange
 import com.yalantis.ucrop.R
 import com.yalantis.ucrop.callback.OverlayViewChangeListener
 import com.yalantis.ucrop.util.RectUtils
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -67,9 +70,6 @@ class OverlayView @JvmOverloads constructor(
             resources.getDimensionPixelSize(R.dimen.ucrop_default_crop_rect_corner_touch_area_line_length)
     }
 
-    init {
-        init()
-    }
     /***
      * Please use the new method [getFreestyleCropMode][.getFreestyleCropMode] method as we have more than 1 freestyle crop mode.
      */
@@ -228,14 +228,8 @@ class OverlayView @JvmOverloads constructor(
         mCircularPath.reset()
         mCircularPath.addCircle(
             cropViewRect.centerX(), cropViewRect.centerY(),
-            Math.min(cropViewRect.width(), cropViewRect.height()) / 2f, Path.Direction.CW
+            min(cropViewRect.width(), cropViewRect.height()) / 2f, Path.Direction.CW
         )
-    }
-
-    protected fun init() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            setLayerType(LAYER_TYPE_SOFTWARE, null)
-        }
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -287,8 +281,8 @@ class OverlayView @JvmOverloads constructor(
         }
         if (event.action and MotionEvent.ACTION_MASK == MotionEvent.ACTION_MOVE) {
             if (event.pointerCount == 1 && mCurrentTouchCornerIndex != -1) {
-                x = Math.min(Math.max(x, paddingLeft.toFloat()), (width - paddingRight).toFloat())
-                y = Math.min(Math.max(y, paddingTop.toFloat()), (height - paddingBottom).toFloat())
+                x = min(max(x, paddingLeft.toFloat()), (width - paddingRight).toFloat())
+                y = min(max(y, paddingTop.toFloat()), (height - paddingBottom).toFloat())
                 updateCropViewRect(x, y)
                 mPreviousTouchX = x
                 mPreviousTouchY = y
@@ -408,7 +402,7 @@ class OverlayView @JvmOverloads constructor(
         if (mCircleDimmedLayer) { // Draw 1px stroke to fix antialias
             canvas.drawCircle(
                 cropViewRect.centerX(), cropViewRect.centerY(),
-                Math.min(cropViewRect.width(), cropViewRect.height()) / 2f, mDimmedStrokePaint
+                min(cropViewRect.width(), cropViewRect.height()) / 2f, mDimmedStrokePaint
             )
         }
     }
@@ -533,7 +527,7 @@ class OverlayView @JvmOverloads constructor(
         )
     }
 
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(AnnotationRetention.SOURCE)
     @IntDef(
         FREESTYLE_CROP_MODE_DISABLE,
         FREESTYLE_CROP_MODE_ENABLE,
