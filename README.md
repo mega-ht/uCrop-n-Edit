@@ -5,11 +5,20 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 # Features
 
-<a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images. I added a few more things. You can see these in the changelog.
+<a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a> extends <a href="https://github.com/Yalantis/uCrop">uCrop</a> by adding the ability to change Brightness, Contrast, Saturation, and Sharpness of images. I updated everything and added a few things. You can see all changes in the changelog.
 
-<p align="center">
-  <img src="preview.gif" width="320" height="560">
-</p>
+<img align="right" src="preview.gif" width="150" height="280"/>
+
+* image compression format (e.g. PNG, JPEG), compression
+* image compression quality [0 - 100]. PNG which is lossless, will ignore the quality setting.
+* change Brightness, Contrast, Saturation, and Sharpness of images
+* whether all gestures are enabled simultaneously
+* maximum size for Bitmap that is decoded from source Uri and used within crop view. If you want to override the default behaviour.
+* toggle whether to show crop frame/guidelines
+* setup color/width/count of crop frame/rows/columns
+* choose whether you want rectangle or oval(`options.setCircleDimmedLayer(true)`) crop area
+* the UI colors (Toolbar, StatusBar, active widget state)
+* and more...
 
 # Usage
 
@@ -26,7 +35,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.7'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.6'
 	}
     ```
 
@@ -63,6 +72,12 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
     ```
 
 [Here](https://github.com/jens-muenker/uCrop-n-Edit/blob/master/UCrop-Options.md) you can find possible options.
+
+# Compatibility
+
+  * Library - Android ICS 5.0+ (API 21) ( java >= 21 ; gradle >= 8.5 )
+  * Sample - Android ICS 5.0+ (API 21) ( java >= 21 ; gradle >= 8.5 )
+  * CPU - armeabi-v7a x86 x86_64 arm64-v8a
 
 # Feedback and Contributions
 
