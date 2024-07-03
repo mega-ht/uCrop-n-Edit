@@ -49,9 +49,10 @@ android {
 
     resourcePrefix 'ucrop_'
 
-    lint {
+    lintOptions {
         abortOnError false
     }
+
     namespace 'com.yalantis.ucrop'
 }
 
