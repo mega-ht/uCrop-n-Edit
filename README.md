@@ -133,6 +133,14 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 - added an AcivityResultLauncher for UCrop
 - fixed a bug mentioned in the <a href="https://github.com/Yalantis/uCrop">uCrop</a> pull requests (https://github.com/Yalantis/uCrop/pull/809)
 
+# Technical Information
+
+This library uses the [CImg](https://cimg.eu) library to modify images. CImg requires the libraries libpng and libjpeg. I will strive to keep them up to date to address security issues.
+
+Current versions in use:
+- **CImg**: 3.4.0
+- **libpng**: 1.6.43
+- **libjpeg**: 9f (see more [here](http://www.ijg.org/files/))
 
 # License
 
