@@ -75,8 +75,8 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 # Compatibility
 
-  * Library - Android ICS 5.0+ (API 21) ( java >= 21 ; gradle >= 8.5 )
-  * Sample - Android ICS 5.0+ (API 21) ( java >= 21 ; gradle >= 8.5 )
+  * Library - Android ICS 5.0+ (API 21) ( java >= 17 ; gradle >= 8.5 )
+  * Sample - Android ICS 5.0+ (API 21) ( java >= 17 ; gradle >= 8.5 )
   * CPU - armeabi-v7a x86 x86_64 arm64-v8a
 
 # Feedback and Contributions
@@ -84,6 +84,11 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
 # Changelog
+
+**3.0.8**
+
+- set sourceCompatibility and targetCompatibility to Java 17 as requested by the community (see issue #14)
+- updated libpng and libjpeg (used by CImg) to their latest versions 
 
 **3.0.7**
 
