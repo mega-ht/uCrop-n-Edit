@@ -87,7 +87,7 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 **3.0.8**
 
-- set sourceCompatibility and targetCompatibility to Java 17 as requested by the community (see issue #14)
+- set sourceCompatibility and targetCompatibility to Java 17 as requested by the community (see issue https://github.com/jens-muenker/uCrop-n-Edit/issues/14)
 - updated libpng and libjpeg (used by CImg) to their latest versions 
 
 **3.0.7**
