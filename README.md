@@ -85,6 +85,10 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 # Changelog
 
+**3.0.9**
+- updated `compileSdk` and `targetSdk` to Android API level 35 (Android 15)
+- recompiled native libraries to support 16kB page sizes for improved compatibility and performance. [Learn more](https://developer.android.com/guide/practices/page-sizes#ndk-build_1).
+
 **3.0.8**
 
 - set sourceCompatibility and targetCompatibility to Java 17 as requested by the community (see issue #14)
