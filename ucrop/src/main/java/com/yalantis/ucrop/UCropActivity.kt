@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
@@ -43,6 +44,7 @@ import com.yalantis.ucrop.view.UCropView
 import com.yalantis.ucrop.view.widget.AspectRatioTextView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView.ScrollingListener
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 
@@ -959,37 +961,39 @@ class UCropActivity : AppCompatActivity() {
         (findViewById<View>(R.id.ucrop_photobox) as RelativeLayout).addView(mBlockingView)
     }
 
-    protected fun cropAndSaveImage() {
+    private fun cropAndSaveImage() {
         mBlockingView!!.isClickable = true
         mShowLoader = true
         supportInvalidateOptionsMenu()
-        mGestureCropImageView!!.cropAndSaveImage(
-            mCompressFormat,
-            mCompressQuality,
-            object : BitmapCropCallback {
-                override fun onBitmapCropped(
-                    resultUri: Uri,
-                    offsetX: Int,
-                    offsetY: Int,
-                    imageWidth: Int,
-                    imageHeight: Int
-                ) {
-                    setResultUri(
-                        resultUri,
-                        mGestureCropImageView!!.targetAspectRatio,
-                        offsetX,
-                        offsetY,
-                        imageWidth,
-                        imageHeight
-                    )
-                    finish()
-                }
+        lifecycleScope.launch{
+            mGestureCropImageView!!.cropAndSaveImage(
+                mCompressFormat,
+                mCompressQuality,
+                object : BitmapCropCallback {
+                    override fun onBitmapCropped(
+                        resultUri: Uri,
+                        offsetX: Int,
+                        offsetY: Int,
+                        imageWidth: Int,
+                        imageHeight: Int
+                    ) {
+                        setResultUri(
+                            resultUri,
+                            mGestureCropImageView!!.targetAspectRatio,
+                            offsetX,
+                            offsetY,
+                            imageWidth,
+                            imageHeight
+                        )
+                        finish()
+                    }
 
-                override fun onCropFailure(t: Throwable) {
-                    setResultError(t)
-                    finish()
-                }
-            })
+                    override fun onCropFailure(t: Throwable) {
+                        setResultError(t)
+                        finish()
+                    }
+                })
+        }
     }
 
     protected fun setResultUri(

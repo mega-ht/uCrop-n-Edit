@@ -24,6 +24,7 @@ import androidx.annotation.IntDef
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
@@ -38,6 +39,7 @@ import com.yalantis.ucrop.view.UCropView
 import com.yalantis.ucrop.view.widget.AspectRatioTextView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView.ScrollingListener
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class UCropFragment : Fragment() {
@@ -461,7 +463,7 @@ class UCropFragment : Fragment() {
             bundle.getInt(UCrop.Options.EXTRA_ASPECT_RATIO_SELECTED_BY_DEFAULT, 0)
         var aspectRatioList =
             bundle.getParcelableArrayList<AspectRatio?>(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS)
-        if (aspectRatioList == null || aspectRatioList.isEmpty()) {
+        if (aspectRatioList.isNullOrEmpty()) {
             aspectRationSelectedByDefault = 2
             aspectRatioList = ArrayList()
             aspectRatioList.add(AspectRatio(null, 1f, 1f))
@@ -812,37 +814,39 @@ class UCropFragment : Fragment() {
     fun cropAndSaveImage() {
         mBlockingView!!.isClickable = true
         callback!!.loadingProgress(true)
-        mGestureCropImageView!!.cropAndSaveImage(
-            mCompressFormat,
-            mCompressQuality,
-            object : BitmapCropCallback {
-                override fun onBitmapCropped(
-                    resultUri: Uri,
-                    offsetX: Int,
-                    offsetY: Int,
-                    imageWidth: Int,
-                    imageHeight: Int
-                ) {
-                    callback!!.onCropFinish(
-                        getResult(
-                            resultUri,
-                            mGestureCropImageView!!.targetAspectRatio,
-                            offsetX,
-                            offsetY,
-                            imageWidth,
-                            imageHeight
+        lifecycleScope.launch {
+            mGestureCropImageView!!.cropAndSaveImage(
+                mCompressFormat,
+                mCompressQuality,
+                object : BitmapCropCallback {
+                    override fun onBitmapCropped(
+                        resultUri: Uri,
+                        offsetX: Int,
+                        offsetY: Int,
+                        imageWidth: Int,
+                        imageHeight: Int
+                    ) {
+                        callback!!.onCropFinish(
+                            getResult(
+                                resultUri,
+                                mGestureCropImageView!!.targetAspectRatio,
+                                offsetX,
+                                offsetY,
+                                imageWidth,
+                                imageHeight
+                            )
                         )
-                    )
-                    callback!!.loadingProgress(false)
-                }
+                        callback!!.loadingProgress(false)
+                    }
 
-                override fun onCropFailure(t: Throwable) {
-                    callback!!.onCropFinish(getError(t))
-                }
-            })
+                    override fun onCropFailure(t: Throwable) {
+                        callback!!.onCropFinish(getError(t))
+                    }
+                })
+        }
     }
 
-    protected fun getResult(
+    private fun getResult(
         uri: Uri?,
         resultAspectRatio: Float,
         offsetX: Int,

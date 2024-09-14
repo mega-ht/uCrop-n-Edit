@@ -5,7 +5,6 @@ import android.content.res.TypedArray
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.Matrix
 import android.graphics.RectF
-import android.os.AsyncTask
 import android.util.AttributeSet
 import androidx.annotation.IntRange
 import com.yalantis.ucrop.R
@@ -16,8 +15,11 @@ import com.yalantis.ucrop.model.ImageState
 import com.yalantis.ucrop.task.BitmapCropTask
 import com.yalantis.ucrop.util.CubicEasing
 import com.yalantis.ucrop.util.RectUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.Arrays
+import kotlin.math.min
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -59,7 +61,7 @@ open class CropImageView @JvmOverloads constructor(
      * Cancels all current animations and sets image to fill crop area (without animation).
      * Then creates and executes [BitmapCropTask] with proper parameters.
      */
-    fun cropAndSaveImage(
+    suspend fun cropAndSaveImage(
         compressFormat: CompressFormat, compressQuality: Int,
         cropCallback: BitmapCropCallback?
     ) {
@@ -69,13 +71,6 @@ open class CropImageView @JvmOverloads constructor(
             mCropRect, RectUtils.trapToRect(mCurrentImageCorners),
             currentScale, currentAngle
         )
-        /*val cropParameters = CropParameters(
-            mMaxResultImageSizeX, mMaxResultImageSizeY,
-            compressFormat, compressQuality,
-            imageInputPath, imageOutputPath, exifInfo,
-            currentBrightness, currentContrast, currentSaturation,
-            currentSharpness
-        )*/
 
         val cropParameters = CropParameters(
             mMaxResultImageSizeX, mMaxResultImageSizeY,
@@ -86,20 +81,11 @@ open class CropImageView @JvmOverloads constructor(
             currentSharpness
         )
 
-        BitmapCropTask(context, viewBitmap, imageState, cropParameters, cropCallback)
-            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        withContext(Dispatchers.IO) {
+            BitmapCropTask(context, viewBitmap, imageState, cropParameters, cropCallback).execute()
+        }
     }
 
-    /**
-     * @return - aspect ratio for crop bounds
-     */
-    /**
-     * This method sets aspect ratio for crop bounds.
-     * If [.SOURCE_IMAGE_ASPECT_RATIO] value is passed - aspect ratio is calculated
-     * based on current image width and height.
-     *
-     * @param targetAspectRatio - aspect ratio for image crop (e.g. 1.77(7) for 16:9)
-     */
     var targetAspectRatio: Float
         get() = mTargetAspectRatio
         set(targetAspectRatio) {
@@ -587,7 +573,7 @@ open class CropImageView @JvmOverloads constructor(
         override fun run() {
             val cropImageView = mCropImageView.get() ?: return
             val now = System.currentTimeMillis()
-            val currentMs = Math.min(mDurationMs, now - mStartTime).toFloat()
+            val currentMs = min(mDurationMs, now - mStartTime).toFloat()
             val newScale = CubicEasing.easeInOut(currentMs, 0f, mDeltaScale, mDurationMs.toFloat())
             if (currentMs < mDurationMs) {
                 cropImageView.zoomInImage(mOldScale + newScale, mDestX, mDestY)
