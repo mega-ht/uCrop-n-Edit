@@ -200,7 +200,7 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
             .setType("image/*")
             .addCategory(Intent.CATEGORY_OPENABLE)
-        val mimeTypes = arrayOf("image/jpeg", "image/png")
+        val mimeTypes = arrayOf("image/jpeg", "image/png", "image/webp")
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
 
         activityResultLauncherGalleryPick.launch(Intent.createChooser(

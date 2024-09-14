@@ -1,7 +1,9 @@
 package com.yalantis.ucrop.task
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
@@ -15,7 +17,11 @@ import okhttp3.Response
 import okio.BufferedSource
 import okio.Sink
 import okio.sink
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
 
 /**
@@ -25,12 +31,13 @@ import java.io.*
  */
 class BitmapLoadTask(
     private val mContext: Context,
-    inputUri: Uri, outputUri: Uri?,
+    inputUri: Uri,
+    outputUri: Uri,
     requiredWidth: Int, requiredHeight: Int,
     loadCallback: BitmapLoadCallback
 ) : AsyncTask<Void?, Void?, BitmapWorkerResult>() {
-    private var mInputUri: Uri?
-    private val mOutputUri: Uri?
+    private var mInputUri: Uri
+    private val mOutputUri: Uri
     private val mRequiredWidth: Int
     private val mRequiredHeight: Int
     private val mBitmapLoadCallback: BitmapLoadCallback
@@ -60,9 +67,6 @@ class BitmapLoadTask(
 
     @Deprecated("")
     override fun doInBackground(vararg params: Void?): BitmapWorkerResult {
-        if (mInputUri == null) {
-            return BitmapWorkerResult(NullPointerException("Input Uri cannot be null"))
-        }
         try {
             processInputUri()
         } catch (e: NullPointerException) {
@@ -82,7 +86,7 @@ class BitmapLoadTask(
         while (!decodeAttemptSuccess) {
             try {
                 val stream = mContext.contentResolver.openInputStream(
-                    mInputUri!!
+                    mInputUri
                 )
                 try {
                     decodeSampledBitmap = BitmapFactory.decodeStream(stream, null, options)
@@ -110,7 +114,7 @@ class BitmapLoadTask(
         if (decodeSampledBitmap == null) {
             return BitmapWorkerResult(IllegalArgumentException("Bitmap could not be decoded from the Uri: [$mInputUri]"))
         }
-        val exifOrientation = BitmapLoadUtils.getExifOrientation(mContext, mInputUri!!)
+        val exifOrientation = BitmapLoadUtils.getExifOrientation(mContext, mInputUri)
         val exifDegrees = BitmapLoadUtils.exifToDegrees(exifOrientation)
         val exifTranslation = BitmapLoadUtils.exifToTranslation(exifOrientation)
         val exifInfo = ExifInfo(exifOrientation, exifDegrees, exifTranslation)
@@ -131,10 +135,10 @@ class BitmapLoadTask(
 
     @Throws(NullPointerException::class, IOException::class, IllegalArgumentException::class)
     private fun processInputUri() {
-        Log.d(TAG, "Uri scheme: " + mInputUri!!.scheme)
-        if (isDownloadUri(mInputUri!!)) {
+        Log.d(TAG, "Uri scheme: " + mInputUri.scheme)
+        if (isDownloadUri(mInputUri)) {
             try {
-                downloadFile(mInputUri!!, mOutputUri)
+                downloadFile(mInputUri, mOutputUri)
             } catch (e: NullPointerException) {
                 Log.e(TAG, "Downloading failed", e)
                 throw e
@@ -142,9 +146,9 @@ class BitmapLoadTask(
                 Log.e(TAG, "Downloading failed", e)
                 throw e
             }
-        } else if (isContentUri(mInputUri!!)) {
+        } else if (isContentUri(mInputUri)) {
             try {
-                copyFile(mInputUri!!, mOutputUri)
+                copyFile(mInputUri, mOutputUri)
             } catch (e: NullPointerException) {
                 Log.e(TAG, "Copying failed", e)
                 throw e
@@ -152,8 +156,8 @@ class BitmapLoadTask(
                 Log.e(TAG, "Copying failed", e)
                 throw e
             }
-        } else if (!isFileUri(mInputUri!!)) {
-            val inputUriScheme = mInputUri!!.scheme
+        } else if (!isFileUri(mInputUri)) {
+            val inputUriScheme = mInputUri.scheme
             Log.e(TAG, "Invalid Uri scheme $inputUriScheme")
             throw IllegalArgumentException("Invalid Uri scheme$inputUriScheme")
         }
@@ -218,7 +222,7 @@ class BitmapLoadTask(
                 source = response.body!!.source()
             }
 
-            val outputStream: OutputStream? = if (isContentUri(mOutputUri!!)) {
+            val outputStream: OutputStream? = if (isContentUri(mOutputUri)) {
                 mContext.contentResolver.openOutputStream(outputUri)
             } else {
                 if (outputUri.path.isNullOrEmpty()) throw NullPointerException("Output Uri path is null")
@@ -251,9 +255,7 @@ class BitmapLoadTask(
         if (result.mBitmapWorkerException == null) {
             mBitmapLoadCallback.onBitmapLoaded(
                 result.mBitmapResult!!,
-                result.mExifInfo!!,
-                mInputUri!!.path!!,
-                mOutputUri?.path
+                result.mExifInfo!!, mInputUri, mOutputUri
             )
         } else {
             mBitmapLoadCallback.onFailure(result.mBitmapWorkerException!!)

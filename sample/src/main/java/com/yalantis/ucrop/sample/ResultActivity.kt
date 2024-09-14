@@ -41,7 +41,7 @@ class ResultActivity : BaseActivity() {
         if (uri != null) {
             try {
                 val uCropView = findViewById<UCropView>(R.id.ucrop)
-                uCropView.cropImageView.setImageUri(uri, null)
+                uCropView.cropImageView.setImageUri(uri, uri)
                 uCropView.overlayView.setShowCropFrame(false)
                 uCropView.overlayView.setShowCropGrid(false)
                 uCropView.overlayView.setDimmedColor(Color.TRANSPARENT)

@@ -26,11 +26,11 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
-import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.nio.channels.FileChannel
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.*
 
 /**
@@ -191,27 +191,41 @@ object FileUtils {
     }
 
     /**
-     * Copies one file into the other with the given paths.
-     * In the event that the paths are the same, trying to copy one file to the other
+     * Copies one file into the other with the given Uris.
+     * In the event that the Uris are the same, trying to copy one file to the other
      * will cause both files to become null.
      * Simply skipping this step if the paths are identical.
+     *
+     * @param context The context from which to require the [android.content.ContentResolver]
+     * @param uriFrom Represents the source file
+     * @param uriTo Represents the destination file
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copyFile(pathFrom: String, pathTo: String) {
-        if (pathFrom.equals(pathTo, ignoreCase = true)) {
+    fun copyFile(context: Context, uriFrom: Uri, uriTo: Uri) {
+        if (uriFrom == uriTo) {
             return
         }
-        var outputChannel: FileChannel? = null
-        var inputChannel: FileChannel? = null
+
+        var isFrom: InputStream? = null
+        var osTo: OutputStream? = null
         try {
-            inputChannel = FileInputStream(File(pathFrom)).channel
-            outputChannel = FileOutputStream(File(pathTo)).channel
-            inputChannel.transferTo(0, inputChannel.size(), outputChannel)
-            inputChannel.close()
+            isFrom = context.contentResolver.openInputStream(uriFrom)
+            osTo = context.contentResolver.openOutputStream(uriTo)
+
+            if (isFrom is FileInputStream && osTo is FileOutputStream) {
+                val inputChannel = isFrom.channel
+                val outputChannel = osTo.channel
+                inputChannel.transferTo(0, inputChannel.size(), outputChannel)
+            } else {
+                throw java.lang.IllegalArgumentException(
+                    "The input or output URI don't represent a file. " +
+                            "uCrop requires then to represent files in order to work properly."
+                )
+            }
         } finally {
-            inputChannel?.close()
-            outputChannel?.close()
+            isFrom?.close()
+            osTo?.close()
         }
     }
 }

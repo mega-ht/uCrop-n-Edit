@@ -69,16 +69,27 @@ open class CropImageView @JvmOverloads constructor(
             mCropRect, RectUtils.trapToRect(mCurrentImageCorners),
             currentScale, currentAngle
         )
-        val cropParameters = CropParameters(
+        /*val cropParameters = CropParameters(
             mMaxResultImageSizeX, mMaxResultImageSizeY,
             compressFormat, compressQuality,
             imageInputPath, imageOutputPath, exifInfo,
             currentBrightness, currentContrast, currentSaturation,
             currentSharpness
+        )*/
+
+        val cropParameters = CropParameters(
+            mMaxResultImageSizeX, mMaxResultImageSizeY,
+            compressFormat, compressQuality,
+            imageInputPath, imageOutputPath,
+            imageInputUri, imageOutputUri, exifInfo,
+            currentBrightness, currentContrast, currentSaturation,
+            currentSharpness
         )
+
         BitmapCropTask(context, viewBitmap, imageState, cropParameters, cropCallback)
             .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
+
     /**
      * @return - aspect ratio for crop bounds
      */

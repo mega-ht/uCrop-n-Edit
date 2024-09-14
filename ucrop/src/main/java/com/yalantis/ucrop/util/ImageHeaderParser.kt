@@ -29,6 +29,9 @@
  */
 package com.yalantis.ucrop.util
 
+import android.content.Context
+import android.net.Uri
+import android.os.ParcelFileDescriptor
 import android.text.TextUtils
 import android.util.Log
 import androidx.exifinterface.media.ExifInterface
@@ -387,12 +390,190 @@ class ImageHeaderParser(`is`: InputStream) {
             return imageMagicNumber and EXIF_MAGIC_NUMBER == EXIF_MAGIC_NUMBER || imageMagicNumber == MOTOROLA_TIFF_MAGIC_NUMBER || imageMagicNumber == INTEL_TIFF_MAGIC_NUMBER
         }
 
+        /**
+         * Copy exif information represented by originalExif into the file represented by imageOutputPath.
+         *
+         * @param originalExif The exif info from the original input file
+         * @param width output image new width
+         * @param height output image new height
+         * @param imageOutputPath The path to the output file
+         */
         @JvmStatic
         fun copyExif(
-            originalExif: ExifInterface,
+            originalExif: ExifInterface?,
             width: Int,
             height: Int,
             imageOutputPath: String?
+        ) {
+            try {
+                val newExif = ExifInterface(
+                    imageOutputPath!!
+                )
+
+                copyExifAttributes(originalExif!!, newExif, width, height)
+            } catch (e: IOException) {
+                Log.d(TAG, e.message!!)
+            }
+        }
+
+        /**
+         * Copy exif information represented by originalExif into the file represented by imageOutputUri and overwrites it's
+         * width and height with the given ones.
+         * This is done by [ExifInterface] through a seekable [FileDescriptor] and this is only possible
+         * starting on Lollipop version of Android.
+         *
+         * @param context The context from which to obtain a content resolver
+         * @param originalExif The exif info from the original input file
+         * @param width output image new width
+         * @param height output image new height
+         * @param imageOutputUri The [Uri] that represents the output file
+         */
+        @JvmStatic
+        fun copyExif(
+            context: Context,
+            originalExif: ExifInterface,
+            width: Int,
+            height: Int,
+            imageOutputUri: Uri?
+        ) {
+
+            var outFd: ParcelFileDescriptor? = null
+            try {
+                // In order to the ExifInterface be able to validate JPEG info from the file, the FileDescriptor must to be
+                // opened en "rw" (read and write) mode
+
+                outFd = context.contentResolver.openFileDescriptor(imageOutputUri!!, "rw")
+                val newExif = ExifInterface(
+                    outFd!!.fileDescriptor
+                )
+
+                copyExifAttributes(originalExif!!, newExif, width, height)
+            } catch (e: IOException) {
+                Log.d(TAG, e.message!!)
+            } finally {
+                if (outFd != null) {
+                    try {
+                        outFd.close()
+                    } catch (e: IOException) {
+                        Log.d(TAG, e.message, e)
+                    }
+                }
+            }
+        }
+
+        /**
+         * Copy exif information from the file represented by imageInputUri into the file represented by imageOutputPath and
+         * overwrites it's width and height with the given ones.
+         *
+         * @param context The context from which to obtain a content resolver
+         * @param width output image new width
+         * @param height output image new height
+         * @param imageInputUri The [Uri] that represents the input file
+         * @param imageOutputPath The path to the output file
+         */
+        @JvmStatic
+        fun copyExif(
+            context: Context,
+            width: Int,
+            height: Int,
+            imageInputUri: Uri?,
+            imageOutputPath: String?
+        ) {
+
+            var ins: InputStream? = null
+            try {
+                ins = context.contentResolver.openInputStream(imageInputUri!!)
+                val originalExif = ExifInterface(
+                    ins!!
+                )
+
+                val newExif = ExifInterface(
+                    imageOutputPath!!
+                )
+
+                copyExifAttributes(originalExif, newExif, width, height)
+            } catch (e: IOException) {
+                Log.d(TAG, e.message, e)
+            } finally {
+                if (ins != null) {
+                    try {
+                        ins.close()
+                    } catch (e: IOException) {
+                        Log.d(TAG, e.message, e)
+                    }
+                }
+            }
+        }
+
+        /**
+         * Copy exif information from the file represented by imageInputUri into the file represented by imageOutputUri and
+         * overwrites it's width and height with the given ones.
+         * This is done by [ExifInterface] through a seekable [FileDescriptor] and this is only possible
+         * starting on Lollipop version of Android.
+         *
+         * @param context The context from which to obtain a content resolver
+         * @param width output image new width
+         * @param height output image new height
+         * @param imageInputUri The [Uri] that represents the input file
+         * @param imageOutputUri The [Uri] that represents the output file
+         */
+        @JvmStatic
+        fun copyExif(
+            context: Context,
+            width: Int,
+            height: Int,
+            imageInputUri: Uri?,
+            imageOutputUri: Uri?
+        ) {
+
+            var ins: InputStream? = null
+            var outFd: ParcelFileDescriptor? = null
+            try {
+                ins = context.contentResolver.openInputStream(imageInputUri!!)
+                val originalExif = ExifInterface(
+                    ins!!
+                )
+
+                outFd = context.contentResolver.openFileDescriptor(imageOutputUri!!, "rw")
+                val newExif = ExifInterface(
+                    outFd!!.fileDescriptor
+                )
+                ImageHeaderParser.copyExifAttributes(originalExif, newExif, width, height)
+            } catch (e: IOException) {
+                Log.d(TAG, e.message, e)
+            } finally {
+                if (ins != null) {
+                    try {
+                        ins.close()
+                    } catch (e: IOException) {
+                        Log.d(TAG, e.message, e)
+                    }
+                }
+                if (outFd != null) {
+                    try {
+                        outFd.close()
+                    } catch (e: IOException) {
+                        Log.d(TAG, e.message, e)
+                    }
+                }
+            }
+        }
+
+        /**
+         * Copy Exif attributes from the originalExif to the newExif and overwrites it's width and height with the given ones.
+         *
+         * @param originalExif Original exif information
+         * @param newExif New exif information
+         * @param width Width for overwriting into the newExif
+         * @param height Height for overwriting into the newExif
+         * @throws IOException If it occurs some IO error while trying to save the new exif info.
+         */
+        @Throws(IOException::class)
+        private fun copyExifAttributes(
+            originalExif: ExifInterface,
+            newExif: ExifInterface,
+            width: Int,
+            height: Int
         ) {
             val attributes = arrayOf(
                 ExifInterface.TAG_F_NUMBER,
@@ -418,24 +599,19 @@ class ImageHeaderParser(`is`: InputStream) {
                 ExifInterface.TAG_SUBSEC_TIME_ORIGINAL,
                 ExifInterface.TAG_WHITE_BALANCE
             )
-            try {
-                val newExif = ExifInterface(
-                    imageOutputPath!!
-                )
-                var value: String?
-                for (attribute in attributes) {
-                    value = originalExif.getAttribute(attribute)
-                    if (!TextUtils.isEmpty(value)) {
-                        newExif.setAttribute(attribute, value)
-                    }
+
+            var value: String?
+            for (attribute in attributes) {
+                value = originalExif.getAttribute(attribute)
+                if (!TextUtils.isEmpty(value)) {
+                    newExif.setAttribute(attribute, value)
                 }
-                newExif.setAttribute(ExifInterface.TAG_IMAGE_WIDTH, width.toString())
-                newExif.setAttribute(ExifInterface.TAG_IMAGE_LENGTH, height.toString())
-                newExif.setAttribute(ExifInterface.TAG_ORIENTATION, "0")
-                newExif.saveAttributes()
-            } catch (e: IOException) {
-                Log.d(TAG, e.message!!)
             }
+            newExif.setAttribute(ExifInterface.TAG_IMAGE_WIDTH, width.toString())
+            newExif.setAttribute(ExifInterface.TAG_IMAGE_LENGTH, height.toString())
+            newExif.setAttribute(ExifInterface.TAG_ORIENTATION, "0")
+
+            newExif.saveAttributes()
         }
     }
 }

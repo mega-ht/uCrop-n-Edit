@@ -26,10 +26,12 @@ import kotlin.math.sqrt
  */
 object BitmapLoadUtils {
     private const val TAG = "BitmapLoadUtils"
+    private const val CONTENT_SCHEME: String = "content"
+
     @JvmStatic
     fun decodeBitmapInBackground(
         context: Context,
-        uri: Uri, outputUri: Uri?,
+        uri: Uri, outputUri: Uri,
         requiredWidth: Int, requiredHeight: Int,
         loadCallback: BitmapLoadCallback?
     ) {
@@ -163,6 +165,12 @@ object BitmapLoadUtils {
         return maxBitmapSize
     }
 
+    @JvmStatic
+    fun hasContentScheme(uri: Uri): Boolean {
+        return CONTENT_SCHEME == uri.scheme
+    }
+
+    @JvmStatic
     fun close(c: Closeable?) {
         if (c != null) { // java.lang.IncompatibleClassChangeError: interface not implemented
             try {
