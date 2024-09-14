@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Point
 import android.net.Uri
-import android.os.AsyncTask
 import android.util.Log
 import android.view.Display
 import android.view.WindowManager
@@ -35,8 +34,7 @@ object BitmapLoadUtils {
         requiredWidth: Int, requiredHeight: Int,
         loadCallback: BitmapLoadCallback?
     ) {
-        BitmapLoadTask(context, uri, outputUri, requiredWidth, requiredHeight, loadCallback!!)
-            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        BitmapLoadTask(context, uri, outputUri, requiredWidth, requiredHeight, loadCallback!!).execute()
     }
 
     fun transformBitmap(bitmap: Bitmap, transformMatrix: Matrix): Bitmap {

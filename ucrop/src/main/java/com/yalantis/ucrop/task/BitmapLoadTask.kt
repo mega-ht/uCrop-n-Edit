@@ -1,46 +1,46 @@
 package com.yalantis.ucrop.task
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.net.Uri
-import android.os.AsyncTask
-import android.util.Log
-import com.yalantis.ucrop.UCropHttpClientStore
-import com.yalantis.ucrop.callback.BitmapLoadCallback
-import com.yalantis.ucrop.model.ExifInfo
-import com.yalantis.ucrop.task.BitmapLoadTask.BitmapWorkerResult
-import com.yalantis.ucrop.util.BitmapLoadUtils
-import okhttp3.Request
-import okhttp3.Response
-import okio.BufferedSource
-import okio.Sink
-import okio.sink
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-
 
 /**
  * Creates and returns a Bitmap for a given Uri(String url).
  * inSampleSize is calculated based on requiredWidth property. However can be adjusted if OOM occurs.
  * If any EXIF config is found - bitmap is transformed properly.
  */
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.net.Uri
+import android.util.Log
+import com.yalantis.ucrop.UCropHttpClientStore
+import com.yalantis.ucrop.callback.BitmapLoadCallback
+import com.yalantis.ucrop.model.ExifInfo
+import com.yalantis.ucrop.util.BitmapLoadUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Request
+import okio.BufferedSource
+import okio.sink
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+
 class BitmapLoadTask(
     private val mContext: Context,
     inputUri: Uri,
     outputUri: Uri,
-    requiredWidth: Int, requiredHeight: Int,
+    requiredWidth: Int,
+    requiredHeight: Int,
     loadCallback: BitmapLoadCallback
-) : AsyncTask<Void?, Void?, BitmapWorkerResult>() {
-    private var mInputUri: Uri
-    private val mOutputUri: Uri
-    private val mRequiredWidth: Int
-    private val mRequiredHeight: Int
-    private val mBitmapLoadCallback: BitmapLoadCallback
+) {
+    private var mInputUri: Uri = inputUri
+    private val mOutputUri: Uri = outputUri
+    private val mRequiredWidth: Int = requiredWidth
+    private val mRequiredHeight: Int = requiredHeight
+    private val mBitmapLoadCallback: BitmapLoadCallback = loadCallback
 
     class BitmapWorkerResult {
         var mBitmapResult: Bitmap? = null
@@ -57,218 +57,158 @@ class BitmapLoadTask(
         }
     }
 
-    init {
-        mInputUri = inputUri
-        mOutputUri = outputUri
-        mRequiredWidth = requiredWidth
-        mRequiredHeight = requiredHeight
-        mBitmapLoadCallback = loadCallback
-    }
-
-    @Deprecated("")
-    override fun doInBackground(vararg params: Void?): BitmapWorkerResult {
-        try {
-            processInputUri()
-        } catch (e: NullPointerException) {
-            return BitmapWorkerResult(e)
-        } catch (e: IOException) {
-            return BitmapWorkerResult(e)
-        } catch (e: IllegalArgumentException) {
-            return BitmapWorkerResult(e)
-        }
-        val options = BitmapFactory.Options()
-        BitmapLoadUtils.decodeDimensions(mContext, mInputUri, options)
-        options.inSampleSize =
-            BitmapLoadUtils.calculateInSampleSize(options, mRequiredWidth, mRequiredHeight)
-        options.inJustDecodeBounds = false
-        var decodeSampledBitmap: Bitmap? = null
-        var decodeAttemptSuccess = false
-        while (!decodeAttemptSuccess) {
-            try {
-                val stream = mContext.contentResolver.openInputStream(
-                    mInputUri
-                )
+    fun execute() {
+        // Launch the coroutine to handle the bitmap loading on a background thread.
+        CoroutineScope(Dispatchers.Main).launch {
+            val result = withContext(Dispatchers.IO) {
                 try {
-                    decodeSampledBitmap = BitmapFactory.decodeStream(stream, null, options)
-                    if (options.outWidth == -1 || options.outHeight == -1) {
-                        return BitmapWorkerResult(IllegalArgumentException("Bounds for bitmap could not be retrieved from the Uri: [$mInputUri]"))
-                    }
-                } finally {
-                    BitmapLoadUtils.close(stream)
+                    processInputUri()
+                } catch (e: Exception) {
+                    return@withContext BitmapWorkerResult(e)
                 }
-                if (checkSize(decodeSampledBitmap, options)) continue
-                decodeAttemptSuccess = true
-            } catch (error: OutOfMemoryError) {
-                Log.e(TAG, "doInBackground: BitmapFactory.decodeFileDescriptor: ", error)
-                options.inSampleSize *= 2
-            } catch (e: IOException) {
-                Log.e(TAG, "doInBackground: ImageDecoder.createSource: ", e)
-                return BitmapWorkerResult(
-                    IllegalArgumentException(
-                        "Bitmap could not be decoded from the Uri: [$mInputUri]",
-                        e
-                    )
-                )
+
+                val options = BitmapFactory.Options().apply {
+                    BitmapLoadUtils.decodeDimensions(mContext, mInputUri, this)
+                    inSampleSize = BitmapLoadUtils.calculateInSampleSize(this, mRequiredWidth, mRequiredHeight)
+                    inJustDecodeBounds = false
+                }
+
+                var decodeSampledBitmap: Bitmap? = null
+                var decodeAttemptSuccess = false
+
+                while (!decodeAttemptSuccess) {
+                    try {
+                        mContext.contentResolver.openInputStream(mInputUri).use { stream ->
+                            decodeSampledBitmap = BitmapFactory.decodeStream(stream, null, options)
+                            if (options.outWidth == -1 || options.outHeight == -1) {
+                                return@withContext BitmapWorkerResult(IllegalArgumentException("Bounds for bitmap could not be retrieved from the Uri: [$mInputUri]"))
+                            }
+                        }
+                        if (checkSize(decodeSampledBitmap, options)) continue
+                        decodeAttemptSuccess = true
+                    } catch (error: OutOfMemoryError) {
+                        Log.e(TAG, "decodeBitmap: BitmapFactory.decodeStream: ", error)
+                        options.inSampleSize *= 2
+                    } catch (e: IOException) {
+                        return@withContext BitmapWorkerResult(IllegalArgumentException("Bitmap could not be decoded from the Uri: [$mInputUri]", e))
+                    }
+                }
+
+                if (decodeSampledBitmap == null) {
+                    return@withContext BitmapWorkerResult(IllegalArgumentException("Bitmap could not be decoded from the Uri: [$mInputUri]"))
+                }
+
+                val exifOrientation = BitmapLoadUtils.getExifOrientation(mContext, mInputUri)
+                val exifDegrees = BitmapLoadUtils.exifToDegrees(exifOrientation)
+                val exifTranslation = BitmapLoadUtils.exifToTranslation(exifOrientation)
+                val exifInfo = ExifInfo(exifOrientation, exifDegrees, exifTranslation)
+
+                val matrix = Matrix().apply {
+                    if (exifDegrees != 0) preRotate(exifDegrees.toFloat())
+                    if (exifTranslation != 1) postScale(exifTranslation.toFloat(), 1f)
+                }
+
+                return@withContext if (!matrix.isIdentity) {
+                    BitmapWorkerResult(BitmapLoadUtils.transformBitmap(decodeSampledBitmap!!, matrix), exifInfo)
+                } else {
+                    BitmapWorkerResult(decodeSampledBitmap!!, exifInfo)
+                }
+            }
+
+            // Handling the result on the Main thread
+            if (result.mBitmapWorkerException == null) {
+                mBitmapLoadCallback.onBitmapLoaded(result.mBitmapResult!!, result.mExifInfo!!, mInputUri, mOutputUri)
+            } else {
+                mBitmapLoadCallback.onFailure(result.mBitmapWorkerException!!)
             }
         }
-        if (decodeSampledBitmap == null) {
-            return BitmapWorkerResult(IllegalArgumentException("Bitmap could not be decoded from the Uri: [$mInputUri]"))
-        }
-        val exifOrientation = BitmapLoadUtils.getExifOrientation(mContext, mInputUri)
-        val exifDegrees = BitmapLoadUtils.exifToDegrees(exifOrientation)
-        val exifTranslation = BitmapLoadUtils.exifToTranslation(exifOrientation)
-        val exifInfo = ExifInfo(exifOrientation, exifDegrees, exifTranslation)
-        val matrix = Matrix()
-        if (exifDegrees != 0) {
-            matrix.preRotate(exifDegrees.toFloat())
-        }
-        if (exifTranslation != 1) {
-            matrix.postScale(exifTranslation.toFloat(), 1f)
-        }
-        return if (!matrix.isIdentity) {
-            BitmapWorkerResult(
-                BitmapLoadUtils.transformBitmap(decodeSampledBitmap, matrix),
-                exifInfo
-            )
-        } else BitmapWorkerResult(decodeSampledBitmap, exifInfo)
     }
 
     @Throws(NullPointerException::class, IOException::class, IllegalArgumentException::class)
-    private fun processInputUri() {
+    private suspend fun processInputUri() = withContext(Dispatchers.IO) {
         Log.d(TAG, "Uri scheme: " + mInputUri.scheme)
-        if (isDownloadUri(mInputUri)) {
-            try {
-                downloadFile(mInputUri, mOutputUri)
-            } catch (e: NullPointerException) {
-                Log.e(TAG, "Downloading failed", e)
-                throw e
-            } catch (e: IOException){
-                Log.e(TAG, "Downloading failed", e)
-                throw e
+        when {
+            isDownloadUri(mInputUri) -> {
+                try {
+                    downloadFile(mInputUri, mOutputUri)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Downloading failed", e)
+                    throw e
+                }
             }
-        } else if (isContentUri(mInputUri)) {
-            try {
-                copyFile(mInputUri, mOutputUri)
-            } catch (e: NullPointerException) {
-                Log.e(TAG, "Copying failed", e)
-                throw e
-            }catch (e: IOException){
-                Log.e(TAG, "Copying failed", e)
-                throw e
+            isContentUri(mInputUri) -> {
+                try {
+                    copyFile(mInputUri, mOutputUri)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Copying failed", e)
+                    throw e
+                }
             }
-        } else if (!isFileUri(mInputUri)) {
-            val inputUriScheme = mInputUri.scheme
-            Log.e(TAG, "Invalid Uri scheme $inputUriScheme")
-            throw IllegalArgumentException("Invalid Uri scheme$inputUriScheme")
+            !isFileUri(mInputUri) -> {
+                Log.e(TAG, "Invalid Uri scheme ${mInputUri.scheme}")
+                throw IllegalArgumentException("Invalid Uri scheme ${mInputUri.scheme}")
+            }
         }
     }
 
-    @Throws(NullPointerException::class, IOException::class)
-    private fun copyFile(inputUri: Uri, outputUri: Uri?) {
+    private suspend fun copyFile(inputUri: Uri, outputUri: Uri?) = withContext(Dispatchers.IO) {
         Log.d(TAG, "copyFile")
-        if (outputUri == null) {
-            throw NullPointerException("Output Uri is null - cannot copy image")
-        }
-        var inputStream: InputStream? = null
-        var outputStream: OutputStream? = null
-        try {
-            inputStream = mContext.contentResolver.openInputStream(inputUri)
-            if (inputStream == null) {
-                throw NullPointerException("InputStream for given input Uri is null")
-            }
+        outputUri ?: throw NullPointerException("Output Uri is null - cannot copy image")
 
-            outputStream = if (isContentUri(outputUri)) {
+        mContext.contentResolver.openInputStream(inputUri)?.use { inputStream ->
+            val outputStream = if (isContentUri(outputUri)) {
                 mContext.contentResolver.openOutputStream(outputUri)
             } else {
-
-                if(outputUri.path.isNullOrEmpty()) throw NullPointerException("Output Uri path is null")
-
                 FileOutputStream(File(outputUri.path!!))
             }
 
-            val buffer = ByteArray(1024)
-            var length: Int
-            while (inputStream.read(buffer).also { length = it } > 0) {
-                outputStream!!.write(buffer, 0, length)
+            outputStream?.use { outStream ->
+                val buffer = ByteArray(1024)
+                var length: Int
+                while (inputStream.read(buffer).also { length = it } > 0) {
+                    outStream.write(buffer, 0, length)
+                }
             }
-        } finally {
-            BitmapLoadUtils.close(outputStream)
-            BitmapLoadUtils.close(inputStream)
+        } ?: throw NullPointerException("InputStream for given input Uri is null")
 
-            // swap uris, because input image was copied to the output destination
-            // (cropped image will override it later)
-            mInputUri = mOutputUri
-        }
+        // Swap URIs after copying
+        mInputUri = mOutputUri
     }
 
-    @Throws(NullPointerException::class, IOException::class)
-    private fun downloadFile(inputUri: Uri, outputUri: Uri?) {
+    private suspend fun downloadFile(inputUri: Uri, outputUri: Uri?) = withContext(Dispatchers.IO) {
         Log.d(TAG, "downloadFile")
-        if (outputUri == null) {
-            throw NullPointerException("Output Uri is null - cannot download image")
-        }
-        val client = UCropHttpClientStore.INSTANCE.client
-        var source: BufferedSource? = null
-        var sink: Sink? = null
-        var response: Response? = null
-        try {
-            val request: Request = Request.Builder()
-                .url(inputUri.toString())
-                .build()
-            if (client != null) {
-                response = client.newCall(request).execute()
-            }
-            if (response != null) {
-                source = response.body!!.source()
-            }
+        outputUri ?: throw NullPointerException("Output Uri is null - cannot download image")
 
-            val outputStream: OutputStream? = if (isContentUri(mOutputUri)) {
+        val client = UCropHttpClientStore.INSTANCE.client
+        val request = Request.Builder().url(inputUri.toString()).build()
+
+        client?.newCall(request)?.execute().use { response ->
+            response ?: throw IOException("Failed to download file from the Uri: [$inputUri]")
+
+            val source: BufferedSource? = response.body?.source()
+            val outputStream: OutputStream? = if (isContentUri(outputUri)) {
                 mContext.contentResolver.openOutputStream(outputUri)
             } else {
-                if (outputUri.path.isNullOrEmpty()) throw NullPointerException("Output Uri path is null")
                 FileOutputStream(File(outputUri.path!!))
             }
 
-            if (outputStream != null) {
-                sink = outputStream.sink()
-                source?.readAll(sink)
-                outputStream.close()
-            } else {
-                throw NullPointerException("OutputStream for given output Uri is null")
-            }
-        } finally {
-            BitmapLoadUtils.close(source)
-            BitmapLoadUtils.close(sink)
-            if (response != null) {
-                BitmapLoadUtils.close(response.body)
-            }
-            client?.dispatcher?.cancelAll()
+            outputStream?.use { sink ->
+                source?.readAll(sink.sink())
+            } ?: throw NullPointerException("OutputStream for given output Uri is null")
 
-            // swap uris, because input image was downloaded to the output destination
-            // (cropped image will override it later)
+            // Swap URIs after downloading
             mInputUri = mOutputUri
-        }
-    }
-
-    @Deprecated("")
-    override fun onPostExecute(result: BitmapWorkerResult) {
-        if (result.mBitmapWorkerException == null) {
-            mBitmapLoadCallback.onBitmapLoaded(
-                result.mBitmapResult!!,
-                result.mExifInfo!!, mInputUri, mOutputUri
-            )
-        } else {
-            mBitmapLoadCallback.onFailure(result.mBitmapWorkerException!!)
         }
     }
 
     private fun checkSize(bitmap: Bitmap?, options: BitmapFactory.Options): Boolean {
         val bitmapSize = bitmap?.byteCount ?: 0
-        if (bitmapSize > MAX_BITMAP_SIZE) {
+        return if (bitmapSize > MAX_BITMAP_SIZE) {
             options.inSampleSize *= 2
-            return true
+            true
+        } else {
+            false
         }
-        return false
     }
 
     private fun isDownloadUri(uri: Uri): Boolean {
