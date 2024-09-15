@@ -1,5 +1,5 @@
 [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit) [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit/month.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit)
-#### Non Native Version
+#### Non-Native Version
 # uCrop'n'Edit - Image Cropping and Editing Library for Android
 
 This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a>, which is in turn a fork of <a href="https://github.com/Yalantis/uCrop">uCrop</a>. I fixed some bugs, updated the dependencies and gradle, and converted much of the code to Kotlin. Furthermore, I added the option to use an ActivityResultLauncher instead of onActivityResult which is deprecated. In addition, in the changelogs you can see all other features I added.
