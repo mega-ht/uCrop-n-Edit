@@ -1,4 +1,5 @@
 [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit) [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit/month.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit)
+#### Non Native Version
 # uCrop'n'Edit - Image Cropping and Editing Library for Android
 
 This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a>, which is in turn a fork of <a href="https://github.com/Yalantis/uCrop">uCrop</a>. I fixed some bugs, updated the dependencies and gradle, and converted much of the code to Kotlin. Furthermore, I added the option to use an ActivityResultLauncher instead of onActivityResult which is deprecated. In addition, in the changelogs you can see all other features I added.
@@ -9,7 +10,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
 <img align="right" src="preview.gif" width="150" height="280"/>
 
-* image compression format (e.g. PNG, JPEG), compression
+* image compression format (e.g. PNG, JPEG, WEBP), compression
 * image compression quality [0 - 100]. PNG which is lossless, will ignore the quality setting.
 * change Brightness, Contrast, Saturation, and Sharpness of images
 * whether all gestures are enabled simultaneously
@@ -35,7 +36,7 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 	...
 	
 	dependencies {
-	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.6'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:4.0.0-non-native'
 	}
     ```
 
@@ -77,13 +78,18 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 
   * Library - Android ICS 5.0+ (API 21) ( java >= 17 ; gradle >= 8.5 )
   * Sample - Android ICS 5.0+ (API 21) ( java >= 17 ; gradle >= 8.5 )
-  * CPU - armeabi-v7a x86 x86_64 arm64-v8a
 
 # Feedback and Contributions
 
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
 # Changelog
+
+**4.0.0-non-native**
+- replaced native libraries with Kotlin implementations
+- added support for webp (and possibly other [Android-supported image formats](https://developer.android.com/media/platform/supported-formats#image-formats), but I have not tested it yet)
+- migrated AsyncTask to Kotlin Coroutines
+- updated deprecated code to modern APIs
 
 **3.0.9**
 - updated `compileSdk` and `targetSdk` to Android API level 35 (Android 15)
@@ -143,20 +149,11 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 - added an AcivityResultLauncher for UCrop
 - fixed a bug mentioned in the <a href="https://github.com/Yalantis/uCrop">uCrop</a> pull requests (https://github.com/Yalantis/uCrop/pull/809)
 
-# Technical Information
-
-This library uses the [CImg](https://cimg.eu) library to modify images. CImg requires the libraries libpng and libjpeg. I will strive to keep them up to date to address security issues.
-
-Current versions in use:
-- **CImg**: 3.4.0
-- **libpng**: 1.6.43
-- **libjpeg**: 9f (see more [here](http://www.ijg.org/files/))
-
 # License
 
 This software is licensed under the Apache License, Version 2.0. See the <a href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a> file for details.
 
-    Copyright 2023, Jens Münker
+    Copyright 2024, Jens Münker
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
