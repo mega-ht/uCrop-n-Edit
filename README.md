@@ -107,6 +107,9 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 # Changelog
 
+**4.0.1-non-native**
+- fixed a file size bug (https://github.com/Yalantis/uCrop/pull/926)
+
 **4.0.0-non-native**
 - replaced native libraries with Kotlin implementations
 - added support for webp (and possibly other Android-supported image formats, but I have not tested it yet)
