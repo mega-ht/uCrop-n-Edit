@@ -1,6 +1,7 @@
 package com.yalantis.ucrop.util
 
 import android.view.MotionEvent
+import kotlin.math.atan2
 
 class RotationGestureDetector(private val mListener: OnRotationGestureListener?) {
     private var fX = 0f
@@ -35,14 +36,11 @@ class RotationGestureDetector(private val mListener: OnRotationGestureListener?)
                 mIsFirstTouch = true
             }
             MotionEvent.ACTION_MOVE -> if (mPointerIndex1 != INVALID_POINTER_INDEX && mPointerIndex2 != INVALID_POINTER_INDEX && event.pointerCount > mPointerIndex2) {
-                val nfX: Float
-                val nfY: Float
-                val nsX: Float
-                val nsY: Float
-                nsX = event.getX(mPointerIndex1)
-                nsY = event.getY(mPointerIndex1)
-                nfX = event.getX(mPointerIndex2)
-                nfY = event.getY(mPointerIndex2)
+                val nsX: Float = event.getX(mPointerIndex1)
+                val nsY: Float = event.getY(mPointerIndex1)
+                val nfX: Float = event.getX(mPointerIndex2)
+                val nfY: Float = event.getY(mPointerIndex2)
+
                 if (mIsFirstTouch) {
                     angle = 0f
                     mIsFirstTouch = false
@@ -67,9 +65,9 @@ class RotationGestureDetector(private val mListener: OnRotationGestureListener?)
     ): Float {
         return calculateAngleDelta(
             Math.toDegrees(
-                Math.atan2((fy1 - fy2).toDouble(), (fx1 - fx2).toDouble()).toFloat().toDouble()
+                atan2((fy1 - fy2).toDouble(), (fx1 - fx2).toDouble()).toFloat().toDouble()
             ).toFloat(), Math.toDegrees(
-                Math.atan2((sy1 - sy2).toDouble(), (sx1 - sx2).toDouble()).toFloat().toDouble()
+                atan2((sy1 - sy2).toDouble(), (sx1 - sx2).toDouble()).toFloat().toDouble()
             ).toFloat()
         )
     }

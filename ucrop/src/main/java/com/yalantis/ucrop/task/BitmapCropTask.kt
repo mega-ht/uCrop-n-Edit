@@ -15,7 +15,6 @@ import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicConvolve3x3
 import android.util.Log
 import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.exifinterface.media.ExifInterface
 import com.yalantis.ucrop.callback.BitmapCropCallback
 import com.yalantis.ucrop.model.CropParameters
@@ -45,11 +44,11 @@ import kotlin.math.min
  * Finally new Bitmap object is created and saved to file.
  */
 class BitmapCropTask(
-    @NonNull context: Context,
-    @Nullable private var mViewBitmap: Bitmap?,
-    @NonNull imageState: ImageState,
-    @NonNull cropParameters: CropParameters,
-    @Nullable private val mCropCallback: BitmapCropCallback?
+    context: Context,
+    private var mViewBitmap: Bitmap?,
+    imageState: ImageState,
+    cropParameters: CropParameters,
+    private val mCropCallback: BitmapCropCallback?
 ) {
 
     private val contextRef = WeakReference(context)

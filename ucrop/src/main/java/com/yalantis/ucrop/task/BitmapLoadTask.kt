@@ -58,7 +58,6 @@ class BitmapLoadTask(
     }
 
     fun execute() {
-        // Launch the coroutine to handle the bitmap loading on a background thread.
         CoroutineScope(Dispatchers.Main).launch {
             val result = withContext(Dispatchers.IO) {
                 try {
@@ -114,8 +113,7 @@ class BitmapLoadTask(
                     BitmapWorkerResult(decodeSampledBitmap!!, exifInfo)
                 }
             }
-
-            // Handling the result on the Main thread
+            
             if (result.mBitmapWorkerException == null) {
                 mBitmapLoadCallback.onBitmapLoaded(result.mBitmapResult!!, result.mExifInfo!!, mInputUri, mOutputUri)
             } else {

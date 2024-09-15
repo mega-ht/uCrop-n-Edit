@@ -41,6 +41,10 @@ publishing {
                         name = 'Martin Anderson'
                         email = 'martins.andersons@hotmail.com'
                     }
+                    developer {
+                        name = 'Jens Münker'
+                        email = 'kontakt@jens-muenker-it-solutions.de'
+                    }
                 }
 
                 scm {

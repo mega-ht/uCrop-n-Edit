@@ -2,6 +2,8 @@ package com.yalantis.ucrop
 
 import android.content.Intent
 import android.graphics.Bitmap.CompressFormat
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
 import android.graphics.drawable.Animatable
 import android.net.Uri
@@ -478,7 +480,9 @@ class UCropActivity : AppCompatActivity() {
         // Color buttons inside the Toolbar
         val stateButtonDrawable = ContextCompat.getDrawable(this, mToolbarCancelDrawable)!!
             .mutate()
-        stateButtonDrawable.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+        val colorFilter = BlendModeColorFilter(mToolbarWidgetColor, BlendMode.SRC_ATOP)
+        stateButtonDrawable.colorFilter = colorFilter
+
         mToolbarView!!.navigationIcon = stateButtonDrawable
         setSupportActionBar(mToolbarView)
         val actionBar = supportActionBar

@@ -4,12 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Insets
 import android.graphics.Matrix
 import android.graphics.Point
 import android.net.Uri
 import android.util.Log
-import android.view.Display
+import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.WindowMetrics
 import androidx.exifinterface.media.ExifInterface
 import com.yalantis.ucrop.callback.BitmapLoadCallback
 import com.yalantis.ucrop.task.BitmapLoadTask
@@ -19,6 +21,7 @@ import java.io.IOException
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
+
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -103,8 +106,7 @@ object BitmapLoadUtils {
     }
 
     fun exifToDegrees(exifOrientation: Int): Int {
-        val rotation: Int
-        rotation = when (exifOrientation) {
+        val rotation: Int = when (exifOrientation) {
             ExifInterface.ORIENTATION_ROTATE_90, ExifInterface.ORIENTATION_TRANSPOSE -> 90
             ExifInterface.ORIENTATION_ROTATE_180, ExifInterface.ORIENTATION_FLIP_VERTICAL -> 180
             ExifInterface.ORIENTATION_ROTATE_270, ExifInterface.ORIENTATION_TRANSVERSE -> 270
@@ -114,8 +116,7 @@ object BitmapLoadUtils {
     }
 
     fun exifToTranslation(exifOrientation: Int): Int {
-        val translation: Int
-        translation = when (exifOrientation) {
+        val translation: Int = when (exifOrientation) {
             ExifInterface.ORIENTATION_FLIP_HORIZONTAL, ExifInterface.ORIENTATION_FLIP_VERTICAL, ExifInterface.ORIENTATION_TRANSPOSE, ExifInterface.ORIENTATION_TRANSVERSE -> -1
             else -> 1
         }
@@ -132,14 +133,30 @@ object BitmapLoadUtils {
     @JvmStatic
     fun calculateMaxBitmapSize(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-        val display: Display
         val width: Int
         val height: Int
-        val size = Point()
+        var size = Point()
+
         if (wm != null) {
-            display = wm.defaultDisplay
-            display.getSize(size)
+            val metrics: WindowMetrics = wm.currentWindowMetrics
+
+            val windowInsets = metrics.windowInsets
+            val insets: Insets = windowInsets.getInsetsIgnoringVisibility(
+                WindowInsets.Type.navigationBars()
+                        or WindowInsets.Type.displayCutout()
+            )
+
+            val insetsWidth: Int = insets.right + insets.left
+            val insetsHeight: Int = insets.top + insets.bottom
+
+            // Legacy size that Display#getSize reports
+            val bounds = metrics.bounds
+            size = Point(
+                bounds.width() - insetsWidth,
+                bounds.height() - insetsHeight
+            )
         }
+
         width = size.x
         height = size.y
 

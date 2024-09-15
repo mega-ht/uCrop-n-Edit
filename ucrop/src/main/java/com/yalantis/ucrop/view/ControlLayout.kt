@@ -62,9 +62,7 @@ class ControlLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val childCount = (0 until linearLayout.childCount)
-                .map { linearLayout.getChildAt(it) }
-                .filter { it.visibility == View.VISIBLE }
-                .count()
+            .map { linearLayout.getChildAt(it) }.count { it.visibility == VISIBLE }
 
         var childWidth = minChildWidth
 

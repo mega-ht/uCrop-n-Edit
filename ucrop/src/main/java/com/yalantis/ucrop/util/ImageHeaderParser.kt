@@ -295,9 +295,7 @@ class ImageHeaderParser(`is`: InputStream) {
         private fun parseExifSegment(segmentData: RandomAccessReader): Int {
             val headerOffsetSize = JPEG_EXIF_SEGMENT_PREAMBLE.length
             val byteOrderIdentifier = segmentData.getInt16(headerOffsetSize)
-            val byteOrder: ByteOrder
-            byteOrder =
-                if (byteOrderIdentifier.toInt() == MOTOROLA_TIFF_MAGIC_NUMBER) {
+            val byteOrder: ByteOrder = if (byteOrderIdentifier.toInt() == MOTOROLA_TIFF_MAGIC_NUMBER) {
                     ByteOrder.BIG_ENDIAN
                 } else if (byteOrderIdentifier.toInt() == INTEL_TIFF_MAGIC_NUMBER) {
                     ByteOrder.LITTLE_ENDIAN
@@ -447,7 +445,7 @@ class ImageHeaderParser(`is`: InputStream) {
                     outFd!!.fileDescriptor
                 )
 
-                copyExifAttributes(originalExif!!, newExif, width, height)
+                copyExifAttributes(originalExif, newExif, width, height)
             } catch (e: IOException) {
                 Log.d(TAG, e.message!!)
             } finally {

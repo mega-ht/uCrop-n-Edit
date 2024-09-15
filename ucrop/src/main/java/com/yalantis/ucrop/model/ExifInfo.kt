@@ -3,7 +3,7 @@ package com.yalantis.ucrop.model
 /**
  * Created by Oleksii Shliama [https://github.com/shliama] on 6/21/16.
  */
-class ExifInfo(var exifOrientation: Int, var exifDegrees: Int, var exifTranslation: Int) {
+class ExifInfo(private var exifOrientation: Int, var exifDegrees: Int, private var exifTranslation: Int) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

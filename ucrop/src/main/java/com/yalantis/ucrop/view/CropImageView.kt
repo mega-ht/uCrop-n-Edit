@@ -368,7 +368,7 @@ open class CropImageView @JvmOverloads constructor(
      * @param imageCorners - corners of a rectangle
      * @return - true if it wraps crop bounds, false - otherwise
      */
-    protected fun isImageWrapCropBounds(imageCorners: FloatArray): Boolean {
+    private fun isImageWrapCropBounds(imageCorners: FloatArray): Boolean {
         mTempMatrix.reset()
         mTempMatrix.setRotate(-currentAngle)
         val unrotatedImageCorners = Arrays.copyOf(imageCorners, imageCorners.size)
@@ -421,10 +421,10 @@ open class CropImageView @JvmOverloads constructor(
      */
     private fun calculateImageScaleBounds(drawableWidth: Float, drawableHeight: Float) {
         val widthScale =
-            Math.min(mCropRect.width() / drawableWidth, mCropRect.width() / drawableHeight)
+            min(mCropRect.width() / drawableWidth, mCropRect.width() / drawableHeight)
         val heightScale =
-            Math.min(mCropRect.height() / drawableHeight, mCropRect.height() / drawableWidth)
-        minScale = Math.min(widthScale, heightScale)
+            min(mCropRect.height() / drawableHeight, mCropRect.height() / drawableWidth)
+        minScale = min(widthScale, heightScale)
         maxScale = minScale * mMaxScaleMultiplier
         val currentScale = currentScale
         if (maxScale < currentScale) maxScale = currentScale

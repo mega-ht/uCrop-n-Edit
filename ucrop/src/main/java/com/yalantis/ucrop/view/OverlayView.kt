@@ -390,7 +390,7 @@ class OverlayView @JvmOverloads constructor(
      *
      * @param canvas - valid canvas object
      */
-    protected fun drawDimmedLayer(canvas: Canvas) {
+    private fun drawDimmedLayer(canvas: Canvas) {
         canvas.save()
         if (mCircleDimmedLayer) {
             canvas.clipPath(mCircularPath, Region.Op.DIFFERENCE)
@@ -413,7 +413,7 @@ class OverlayView @JvmOverloads constructor(
      *
      * @param canvas - valid canvas object
      */
-    protected fun drawCropGrid(canvas: Canvas) {
+    private fun drawCropGrid(canvas: Canvas) {
         if (mShowCropGrid) {
             if (mGridPoints == null && !cropViewRect.isEmpty) {
                 mGridPoints = FloatArray(mCropGridRowCount * 4 + mCropGridColumnCount * 4)
@@ -449,13 +449,13 @@ class OverlayView @JvmOverloads constructor(
                 mCropRectCornerTouchAreaLineLength.toFloat(),
                 -mCropRectCornerTouchAreaLineLength.toFloat()
             )
-            canvas.clipRect(mTempRect, Region.Op.DIFFERENCE)
+            canvas.clipOutRect(mTempRect)
             mTempRect.set(cropViewRect)
             mTempRect.inset(
                 -mCropRectCornerTouchAreaLineLength.toFloat(),
                 mCropRectCornerTouchAreaLineLength.toFloat()
             )
-            canvas.clipRect(mTempRect, Region.Op.DIFFERENCE)
+            canvas.clipOutRect(mTempRect)
             canvas.drawRect(cropViewRect, mCropFrameCornersPaint)
             canvas.restore()
         }

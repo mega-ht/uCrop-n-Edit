@@ -1,6 +1,8 @@
 package com.yalantis.ucrop.util
 
 import android.graphics.ColorMatrix
+import kotlin.math.max
+import kotlin.math.min
 
 object ColorFilterGenerator {
     private val DELTA_INDEX = doubleArrayOf(
@@ -21,7 +23,6 @@ object ColorFilterGenerator {
      * @param cm
      * @param value
      * @see http://groups.google.com/group/android-developers/browse_thread/thread/9e215c83c3819953
-     *
      * @see http://gskinner.com/blog/archives/2007/12/colormatrix_cla.html
      */
     fun adjustHue(cm: ColorMatrix, value: Float) {
@@ -99,7 +100,6 @@ object ColorFilterGenerator {
             x = if (x == 0f) {
                 DELTA_INDEX[valueInt].toFloat()
             } else {
-                //x = DELTA_INDEX[(p_val<<0)]; // this is how the IDE does it.
                 DELTA_INDEX[valueInt shl 0].toFloat() * (1 - x) + DELTA_INDEX[(valueInt shl 0) + 1].toFloat() * x // use linear interpolation for more granularity.
             }
             x = x * 127 + 127
@@ -138,6 +138,6 @@ object ColorFilterGenerator {
     }
 
     private fun cleanValue(p_val: Float, p_limit: Float): Float {
-        return Math.min(p_limit, Math.max(-p_limit, p_val))
+        return min(p_limit, max(-p_limit, p_val))
     }
 }
