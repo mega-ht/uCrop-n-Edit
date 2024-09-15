@@ -56,7 +56,7 @@ If someone has the time and interest to implement this, I would greatly apprecia
 	...
 	
 	dependencies {
-	        implementation 'com.github.jens-muenker:uCrop-n-Edit:4.0.0-non-native'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:4.0.1-non-native'
 	}
     ```
 
