@@ -14,7 +14,6 @@ import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicConvolve3x3
 import android.util.Log
-import androidx.annotation.NonNull
 import androidx.exifinterface.media.ExifInterface
 import com.yalantis.ucrop.callback.BitmapCropCallback
 import com.yalantis.ucrop.model.CropParameters
@@ -247,14 +246,14 @@ class BitmapCropTask(
         }
     }
 
-    private suspend fun saveImage(@NonNull croppedBitmap: Bitmap) = withContext(Dispatchers.IO) {
+    private suspend fun saveImage(croppedBitmap: Bitmap) = withContext(Dispatchers.IO) {
         val context = contextRef.get() ?: return@withContext
 
         var outputStream: OutputStream? = null
         var outStream: ByteArrayOutputStream? = null
 
         try {
-            outputStream = context.contentResolver.openOutputStream(mImageOutputUri)
+            outputStream = context.contentResolver.openOutputStream(mImageOutputUri, "wt")
             outStream = ByteArrayOutputStream().also {
                 croppedBitmap.compress(mCompressFormat, mCompressQuality, it)
                 outputStream?.write(it.toByteArray())
