@@ -1,5 +1,5 @@
 [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit) [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit/month.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit)
-#### Non Native Version
+#### Non-Native Version
 # uCrop'n'Edit - Image Cropping and Editing Library for Android
 
 This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a>, which is in turn a fork of <a href="https://github.com/Yalantis/uCrop">uCrop</a>. I fixed some bugs, updated the dependencies and gradle, and converted much of the code to Kotlin. Furthermore, I added the option to use an ActivityResultLauncher instead of onActivityResult which is deprecated. In addition, in the changelogs you can see all other features I added.
@@ -20,6 +20,26 @@ This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">u
 * choose whether you want rectangle or oval(`options.setCircleDimmedLayer(true)`) crop area
 * the UI colors (Toolbar, StatusBar, active widget state)
 * and more...
+
+# Native vs Non-Native Version
+
+I have split this repository into two separate branches:  
+- **Native**: `master`, `develop`
+- **Non-Native**: `master-non-native`, `develop-non-native`
+
+### Reason for the Split
+
+The main reason for this split was the need for **WebP** file format support. While it is possible to implement this in the native version using [ImageMagick](https://imagemagick.org) as an additional layer for file handling (as mentioned [here](https://cimg.eu/reference/structcimg__library_1_1CImg.html)), I currently don't have the time to do so.
+
+If someone has the time and interest to implement this, I would greatly appreciate it. Feel free to submit a pull request!
+
+### Key Differences Between the Versions
+
+- **Native Version**:
+  - Supports only JPEG, PNG, BMP, and [a few more formats](http://www.cimg.eu/reference/io.html).
+  
+- **Non-Native Version**:
+  - Supports JPEG, PNG, BMP, **WebP**, and possibly other [Android-supported image formats](https://developer.android.com/media/platform/supported-formats#image-formats) (untested).
 
 # Usage
 
