@@ -105,6 +105,15 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 # Changelog
 
+**4.0.1-non-native**
+- fixed a file size bug (https://github.com/Yalantis/uCrop/pull/926)
+
+**4.0.0-non-native**
+- replaced native libraries with Kotlin implementations
+- added support for webp (and possibly other [Android-supported image formats](https://developer.android.com/media/platform/supported-formats#image-formats), but I have not tested it yet)
+- migrated AsyncTask to Kotlin Coroutines
+- updated deprecated code to modern APIs
+
 **3.0.9**
 - updated `compileSdk` and `targetSdk` to Android API level 35 (Android 15)
 - recompiled native libraries to support 16kB page sizes for improved compatibility and performance - [Learn more](https://developer.android.com/guide/practices/page-sizes#ndk-build_1)
