@@ -105,6 +105,14 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 # Changelog
 
+**4.0.2-non-native**
+- fixed #20 and #21
+- fixed an Android API error
+
+**4.0.2**
+- fixed #20 and #21
+- fixed an Android API error
+
 **4.0.1-non-native**
 - fixed a file size bug (https://github.com/Yalantis/uCrop/pull/926)
 
