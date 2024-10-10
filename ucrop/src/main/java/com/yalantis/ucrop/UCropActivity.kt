@@ -5,8 +5,10 @@ import android.graphics.Bitmap.CompressFormat
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Animatable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -492,8 +494,16 @@ class UCropActivity : AppCompatActivity() {
         // Color buttons inside the Toolbar
         val stateButtonDrawable = ContextCompat.getDrawable(this, mToolbarCancelDrawable)!!
             .mutate()
-        val colorFilter = BlendModeColorFilter(mToolbarWidgetColor, BlendMode.SRC_ATOP)
+
+        val colorFilter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Für API 29 und höher: Verwende BlendModeColorFilter
+            BlendModeColorFilter(mToolbarWidgetColor, BlendMode.SRC_ATOP)
+        } else {
+            // Für ältere Android-Versionen: Verwende PorterDuffColorFilter
+            PorterDuffColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+        }
         stateButtonDrawable.colorFilter = colorFilter
+
 
         mToolbarView!!.navigationIcon = stateButtonDrawable
         setSupportActionBar(mToolbarView)
