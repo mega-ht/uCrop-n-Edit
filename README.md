@@ -1,4 +1,6 @@
 [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit) [![](https://jitpack.io/v/jens-muenker/uCrop-n-Edit/month.svg)](https://jitpack.io/#jens-muenker/uCrop-n-Edit)
+#### Native Version
+
 # uCrop'n'Edit - Image Cropping and Editing Library for Android
 
 This repository is a fork of <a href="https://github.com/krokyze/uCrop-n-Edit">uCrop'n'Edit</a>, which is in turn a fork of <a href="https://github.com/Yalantis/uCrop">uCrop</a>. I fixed some bugs, updated the dependencies and gradle, and converted much of the code to Kotlin. Furthermore, I added the option to use an ActivityResultLauncher instead of onActivityResult which is deprecated. In addition, in the changelogs you can see all other features I added.
@@ -55,7 +57,7 @@ If someone has the time and interest to implement this, I would greatly apprecia
 	...
 	
 	dependencies {
-	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.6'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:3.0.9'
 	}
     ```
 
@@ -129,7 +131,7 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 **3.0.8**
 
-- set sourceCompatibility and targetCompatibility to Java 17 as requested by the community (see issue #14)
+- set sourceCompatibility and targetCompatibility to Java 17 as requested by the community (see issue https://github.com/jens-muenker/uCrop-n-Edit/issues/14)
 - updated libpng and libjpeg (used by CImg) to their latest versions 
 
 **3.0.7**
