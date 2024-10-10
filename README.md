@@ -37,10 +37,10 @@ If someone has the time and interest to implement this, I would greatly apprecia
 ### Key Differences Between the Versions
 
 - **Native Version**:
-  - Supports only JPEG, PNG, BMP, and [a few more formats](http://www.cimg.eu/reference/io.html)
+  - Supports only JPEG, PNG, BMP, and [a few more formats](http://www.cimg.eu/reference/io.html).
   
 - **Non-Native Version**:
-  - Supports JPEG, PNG, BMP, **WebP**, and possibly other [Android-supported image formats](https://developer.android.com/media/platform/supported-formats#image-formats) (untested)
+  - Supports JPEG, PNG, BMP, **WebP**, and possibly other [Android-supported image formats](https://developer.android.com/media/platform/supported-formats#image-formats) (untested).
 
 # Usage
 
@@ -107,12 +107,20 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 # Changelog
 
+**4.0.2-non-native**
+- fixed #20 and #21
+- fixed an Android API error
+
+**4.0.2**
+- fixed #20 and #21
+- fixed an Android API error
+
 **4.0.1-non-native**
 - fixed a file size bug (https://github.com/Yalantis/uCrop/pull/926)
 
 **4.0.0-non-native**
 - replaced native libraries with Kotlin implementations
-- added support for webp (and possibly other Android-supported image formats, but I have not tested it yet)
+- added support for webp (and possibly other [Android-supported image formats](https://developer.android.com/media/platform/supported-formats#image-formats), but I have not tested it yet)
 - migrated AsyncTask to Kotlin Coroutines
 - updated deprecated code to modern APIs
 
