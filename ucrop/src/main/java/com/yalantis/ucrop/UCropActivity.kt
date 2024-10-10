@@ -341,29 +341,41 @@ class UCropActivity : AppCompatActivity() {
             mGestureCropImageView!!.setMaxResultImageSizeX(maxSizeX)
             mGestureCropImageView!!.setMaxResultImageSizeY(maxSizeY)
         }
-        mWrapperStateBrightness!!.visibility = if (getIntent().getBooleanExtra(
-                UCrop.Options.EXTRA_BRIGHTNESS,
-                true
-            )
-        ) View.VISIBLE else View.GONE
-        mWrapperStateContrast!!.visibility = if (getIntent().getBooleanExtra(
-                UCrop.Options.EXTRA_CONTRAST,
-                true
-            )
-        ) View.VISIBLE else View.GONE
-        mWrapperStateSaturation!!.visibility = if (getIntent().getBooleanExtra(
-                UCrop.Options.EXTRA_SATURATION,
-                true
-            )
-        ) View.VISIBLE else View.GONE
-        if (getIntent().getBooleanExtra(
-                UCrop.Options.EXTRA_SHARPNESS,
-                true
-            )
-        ) {
-            mWrapperStateSharpness!!.visibility = View.VISIBLE
-        } else {
-            mWrapperStateSharpness!!.visibility = View.GONE
+
+        if(mWrapperStateBrightness != null){
+            mWrapperStateBrightness!!.visibility = if (getIntent().getBooleanExtra(
+                    UCrop.Options.EXTRA_BRIGHTNESS,
+                    true
+                )
+            ) View.VISIBLE else View.GONE
+        }
+
+        if(mWrapperStateContrast != null){
+            mWrapperStateContrast!!.visibility = if (getIntent().getBooleanExtra(
+                    UCrop.Options.EXTRA_CONTRAST,
+                    true
+                )
+            ) View.VISIBLE else View.GONE
+        }
+
+        if(mWrapperStateSaturation != null){
+            mWrapperStateSaturation!!.visibility = if (getIntent().getBooleanExtra(
+                    UCrop.Options.EXTRA_SATURATION,
+                    true
+                )
+            ) View.VISIBLE else View.GONE
+        }
+
+        if(mWrapperStateSharpness != null){
+            if (getIntent().getBooleanExtra(
+                    UCrop.Options.EXTRA_SHARPNESS,
+                    true
+                )
+            ) {
+                mWrapperStateSharpness!!.visibility = View.VISIBLE
+            } else {
+                mWrapperStateSharpness!!.visibility = View.GONE
+            }
         }
     }
 
