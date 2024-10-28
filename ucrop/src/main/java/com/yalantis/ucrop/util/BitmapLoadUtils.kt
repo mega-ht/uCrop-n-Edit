@@ -8,6 +8,7 @@ import android.graphics.Insets
 import android.graphics.Matrix
 import android.graphics.Point
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -138,23 +139,26 @@ object BitmapLoadUtils {
         var size = Point()
 
         if (wm != null) {
-            val metrics: WindowMetrics = wm.currentWindowMetrics
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val metrics: WindowMetrics = wm.currentWindowMetrics
 
-            val windowInsets = metrics.windowInsets
-            val insets: Insets = windowInsets.getInsetsIgnoringVisibility(
-                WindowInsets.Type.navigationBars()
-                        or WindowInsets.Type.displayCutout()
-            )
+                val windowInsets = metrics.windowInsets
+                val insets: Insets = windowInsets.getInsetsIgnoringVisibility(
+                    WindowInsets.Type.navigationBars()
+                            or WindowInsets.Type.displayCutout()
+                )
 
-            val insetsWidth: Int = insets.right + insets.left
-            val insetsHeight: Int = insets.top + insets.bottom
+                val insetsWidth: Int = insets.right + insets.left
+                val insetsHeight: Int = insets.top + insets.bottom
 
-            // Legacy size that Display#getSize reports
-            val bounds = metrics.bounds
-            size = Point(
-                bounds.width() - insetsWidth,
-                bounds.height() - insetsHeight
-            )
+                val bounds = metrics.bounds
+                size = Point(
+                    bounds.width() - insetsWidth,
+                    bounds.height() - insetsHeight
+                )
+            } else {
+                wm.defaultDisplay.getSize(size)
+            }
         }
 
         width = size.x
