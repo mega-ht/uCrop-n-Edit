@@ -47,12 +47,11 @@ android {
     }
 
     resourcePrefix 'ucrop_'
+    namespace 'com.yalantis.ucrop'
 
-    lintOptions {
+    lint {
         abortOnError false
     }
-
-    namespace 'com.yalantis.ucrop'
 }
 
 java {
@@ -62,7 +61,7 @@ java {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.21'
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation 'androidx.exifinterface:exifinterface:1.3.7'
     implementation "androidx.transition:transition:1.5.1"
