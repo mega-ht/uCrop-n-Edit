@@ -56,7 +56,7 @@ If someone has the time and interest to implement this, I would greatly apprecia
 	...
 	
 	dependencies {
-	        implementation 'com.github.jens-muenker:uCrop-n-Edit:4.0.1-non-native'
+	        implementation 'com.github.jens-muenker:uCrop-n-Edit:version'
 	}
     ```
 
@@ -104,6 +104,14 @@ If someone has the time and interest to implement this, I would greatly apprecia
 If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my best to keep this up to date. If you find any bugs, please add a new issue.
 
 # Changelog
+
+**4.0.3-non-native**
+- add support for edge-to-edge displays
+- fixed #24
+
+**4.0.3**
+- add support for edge-to-edge displays
+- fixed #24
 
 **4.0.2-non-native**
 - fixed #20 and #21
