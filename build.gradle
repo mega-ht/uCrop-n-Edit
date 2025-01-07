@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        agp_version = '8.6.0'
+        agp_version = '8.7.3'
     }
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
