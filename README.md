@@ -105,6 +105,14 @@ If you have any ideas for uCrop'n'Edit, feel free to let me know. I will try my 
 
 # Changelog
 
+**4.0.4-non-native**
+- improved support for edge-to-edge displays (thanks to [MankinChung](https://github.com/MankinChung) https://github.com/jens-muenker/uCrop-n-Edit/pull/28)
+- updated dependencies and gradle
+
+**4.0.4**
+- improved support for edge-to-edge displays (thanks to [MankinChung](https://github.com/MankinChung) https://github.com/jens-muenker/uCrop-n-Edit/pull/28)
+- updated dependencies and gradle
+
 **4.0.3-non-native**
 - add support for edge-to-edge displays
 - fixed #24
