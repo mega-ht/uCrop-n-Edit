@@ -2,14 +2,10 @@ package com.yalantis.ucrop
 
 import android.content.Intent
 import android.graphics.Bitmap.CompressFormat
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Animatable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -37,6 +33,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -184,7 +182,9 @@ class UCropActivity : AppCompatActivity() {
         if (menuItemLoaderIcon != null) {
             try {
                 menuItemLoaderIcon.mutate()
-                menuItemLoaderIcon.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+                menuItemLoaderIcon.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                    mToolbarWidgetColor, BlendModeCompat.SRC_ATOP
+                )
                 menuItemLoader.icon = menuItemLoaderIcon
             } catch (e: IllegalStateException) {
                 Log.i(
@@ -546,15 +546,9 @@ class UCropActivity : AppCompatActivity() {
         val stateButtonDrawable = ContextCompat.getDrawable(this, mToolbarCancelDrawable)!!
             .mutate()
 
-        val colorFilter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Für API 29 und höher: Verwende BlendModeColorFilter
-            BlendModeColorFilter(mToolbarWidgetColor, BlendMode.SRC_ATOP)
-        } else {
-            // Für ältere Android-Versionen: Verwende PorterDuffColorFilter
-            PorterDuffColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
-        }
-        stateButtonDrawable.colorFilter = colorFilter
-
+        stateButtonDrawable.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+            mToolbarWidgetColor, BlendModeCompat.SRC_ATOP
+        )
 
         mToolbarView!!.navigationIcon = stateButtonDrawable
         setSupportActionBar(mToolbarView)

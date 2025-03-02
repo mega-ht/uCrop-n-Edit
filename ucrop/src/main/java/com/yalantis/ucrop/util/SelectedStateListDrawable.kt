@@ -1,9 +1,9 @@
 package com.yalantis.ucrop.util
 
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.StateListDrawable
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 
 
 /**
@@ -24,7 +24,9 @@ class SelectedStateListDrawable(drawable: Drawable?, private val mSelectionColor
             }
         }
         if (isStatePressedInArray) {
-            val colorFilter = BlendModeColorFilter(mSelectionColor, BlendMode.SRC_ATOP)
+            val colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                mSelectionColor, BlendModeCompat.SRC_ATOP
+            )
             super.setColorFilter(colorFilter)
         } else {
             super.clearColorFilter()
