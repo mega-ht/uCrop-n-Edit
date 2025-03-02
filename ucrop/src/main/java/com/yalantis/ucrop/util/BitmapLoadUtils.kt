@@ -23,7 +23,6 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
@@ -34,25 +33,31 @@ object BitmapLoadUtils {
     @JvmStatic
     fun decodeBitmapInBackground(
         context: Context,
-        uri: Uri, outputUri: Uri,
-        requiredWidth: Int, requiredHeight: Int,
-        loadCallback: BitmapLoadCallback?
+        uri: Uri,
+        outputUri: Uri,
+        requiredWidth: Int,
+        requiredHeight: Int,
+        loadCallback: BitmapLoadCallback?,
     ) {
         BitmapLoadTask(context, uri, outputUri, requiredWidth, requiredHeight, loadCallback!!).execute()
     }
 
-    fun transformBitmap(bitmap: Bitmap, transformMatrix: Matrix): Bitmap {
+    fun transformBitmap(
+        bitmap: Bitmap,
+        transformMatrix: Matrix,
+    ): Bitmap {
         var bitmap = bitmap
         try {
-            val converted = Bitmap.createBitmap(
-                bitmap,
-                0,
-                0,
-                bitmap.width,
-                bitmap.height,
-                transformMatrix,
-                true
-            )
+            val converted =
+                Bitmap.createBitmap(
+                    bitmap,
+                    0,
+                    0,
+                    bitmap.width,
+                    bitmap.height,
+                    transformMatrix,
+                    true,
+                )
             if (!bitmap.sameAs(converted)) {
                 bitmap = converted
             }
@@ -65,7 +70,7 @@ object BitmapLoadUtils {
     fun decodeDimensions(
         context: Context,
         uri: Uri?,
-        options: BitmapFactory.Options
+        options: BitmapFactory.Options,
     ) {
         options.inJustDecodeBounds = true
         try {
@@ -79,7 +84,11 @@ object BitmapLoadUtils {
         }
     }
 
-    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    fun calculateInSampleSize(
+        options: BitmapFactory.Options,
+        reqWidth: Int,
+        reqHeight: Int,
+    ): Int {
         // Raw height and width of image
         val height = options.outHeight
         val width = options.outWidth
@@ -94,7 +103,10 @@ object BitmapLoadUtils {
         return inSampleSize
     }
 
-    fun getExifOrientation(context: Context, imageUri: Uri): Int {
+    fun getExifOrientation(
+        context: Context,
+        imageUri: Uri,
+    ): Int {
         var orientation = ExifInterface.ORIENTATION_UNDEFINED
         try {
             val stream = context.contentResolver.openInputStream(imageUri) ?: return orientation
@@ -107,20 +119,22 @@ object BitmapLoadUtils {
     }
 
     fun exifToDegrees(exifOrientation: Int): Int {
-        val rotation: Int = when (exifOrientation) {
-            ExifInterface.ORIENTATION_ROTATE_90, ExifInterface.ORIENTATION_TRANSPOSE -> 90
-            ExifInterface.ORIENTATION_ROTATE_180, ExifInterface.ORIENTATION_FLIP_VERTICAL -> 180
-            ExifInterface.ORIENTATION_ROTATE_270, ExifInterface.ORIENTATION_TRANSVERSE -> 270
-            else -> 0
-        }
+        val rotation: Int =
+            when (exifOrientation) {
+                ExifInterface.ORIENTATION_ROTATE_90, ExifInterface.ORIENTATION_TRANSPOSE -> 90
+                ExifInterface.ORIENTATION_ROTATE_180, ExifInterface.ORIENTATION_FLIP_VERTICAL -> 180
+                ExifInterface.ORIENTATION_ROTATE_270, ExifInterface.ORIENTATION_TRANSVERSE -> 270
+                else -> 0
+            }
         return rotation
     }
 
     fun exifToTranslation(exifOrientation: Int): Int {
-        val translation: Int = when (exifOrientation) {
-            ExifInterface.ORIENTATION_FLIP_HORIZONTAL, ExifInterface.ORIENTATION_FLIP_VERTICAL, ExifInterface.ORIENTATION_TRANSPOSE, ExifInterface.ORIENTATION_TRANSVERSE -> -1
-            else -> 1
-        }
+        val translation: Int =
+            when (exifOrientation) {
+                ExifInterface.ORIENTATION_FLIP_HORIZONTAL, ExifInterface.ORIENTATION_FLIP_VERTICAL, ExifInterface.ORIENTATION_TRANSPOSE, ExifInterface.ORIENTATION_TRANSVERSE -> -1
+                else -> 1
+            }
         return translation
     }
 
@@ -139,24 +153,27 @@ object BitmapLoadUtils {
         var size = Point()
 
         if (wm != null) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 val metrics: WindowMetrics = wm.currentWindowMetrics
 
                 val windowInsets = metrics.windowInsets
-                val insets: Insets = windowInsets.getInsetsIgnoringVisibility(
-                    WindowInsets.Type.navigationBars()
-                            or WindowInsets.Type.displayCutout()
-                )
+                val insets: Insets =
+                    windowInsets.getInsetsIgnoringVisibility(
+                        WindowInsets.Type.navigationBars()
+                            or WindowInsets.Type.displayCutout(),
+                    )
 
                 val insetsWidth: Int = insets.right + insets.left
                 val insetsHeight: Int = insets.top + insets.bottom
 
                 val bounds = metrics.bounds
-                size = Point(
-                    bounds.width() - insetsWidth,
-                    bounds.height() - insetsHeight
-                )
+                size =
+                    Point(
+                        bounds.width() - insetsWidth,
+                        bounds.height() - insetsHeight,
+                    )
             } else {
+                @Suppress("DEPRECATION")
                 wm.defaultDisplay.getSize(size)
             }
         }
@@ -185,9 +202,7 @@ object BitmapLoadUtils {
     }
 
     @JvmStatic
-    fun hasContentScheme(uri: Uri): Boolean {
-        return CONTENT_SCHEME == uri.scheme
-    }
+    fun hasContentScheme(uri: Uri): Boolean = CONTENT_SCHEME == uri.scheme
 
     @JvmStatic
     fun close(c: Closeable?) {
