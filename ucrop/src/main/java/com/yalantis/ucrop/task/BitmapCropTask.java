@@ -138,7 +138,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
                 Matrix matrix = new Matrix();
                 canvas.drawBitmap(sourceBitmap, matrix, paint);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mSharpness != 0.0f) {
+                if (mSharpness != 0.0f) {
                     RenderScript rs = RenderScript.create(contextRef.get());
 
                     // Allocate buffers

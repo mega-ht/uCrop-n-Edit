@@ -37,6 +37,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -184,7 +186,9 @@ class UCropActivity : AppCompatActivity() {
         if (menuItemLoaderIcon != null) {
             try {
                 menuItemLoaderIcon.mutate()
-                menuItemLoaderIcon.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+                menuItemLoaderIcon.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                    mToolbarWidgetColor, BlendModeCompat.SRC_ATOP
+                )
                 menuItemLoader.icon = menuItemLoaderIcon
             } catch (e: IllegalStateException) {
                 Log.i(
@@ -202,7 +206,9 @@ class UCropActivity : AppCompatActivity() {
         val menuItemCropIcon = ContextCompat.getDrawable(this, mToolbarCropDrawable)
         if (menuItemCropIcon != null) {
             menuItemCropIcon.mutate()
-            menuItemCropIcon.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+            menuItemCropIcon.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                mToolbarWidgetColor, BlendModeCompat.SRC_ATOP
+            )
             menuItemCrop.icon = menuItemCropIcon
         }
         return true
