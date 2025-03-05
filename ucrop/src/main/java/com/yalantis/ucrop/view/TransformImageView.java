@@ -381,7 +381,6 @@ public class TransformImageView extends AppCompatImageView {
      * Once all operation is finished at onPostExecute() in UI thread, it can invalidate and update
      * ImageView UI.
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private class SharpnessScriptTask extends AsyncTask<Float, Void, Boolean> {
         Boolean issued = false;
 
@@ -512,9 +511,6 @@ public class TransformImageView extends AppCompatImageView {
      * <p>Creates RenderScript kernel that performs sharpness manipulation.</p>
      */
     private void createScript(Bitmap bitmap) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return;
-        }
 
         // Initialize RS
         RenderScript rs = RenderScript.create(getContext());
