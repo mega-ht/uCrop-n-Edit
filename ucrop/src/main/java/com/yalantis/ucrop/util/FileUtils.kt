@@ -20,7 +20,6 @@ import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -31,7 +30,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.channels.FileChannel
-import java.util.*
+import java.util.Locale
 
 /**
  * @author Peli
@@ -49,35 +48,27 @@ object FileUtils {
      * @return Whether the Uri authority is ExternalStorageProvider.
      * @author paulburke
      */
-    fun isExternalStorageDocument(uri: Uri): Boolean {
-        return "com.android.externalstorage.documents" == uri.authority
-    }
+    fun isExternalStorageDocument(uri: Uri): Boolean = "com.android.externalstorage.documents" == uri.authority
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      * @author paulburke
      */
-    fun isDownloadsDocument(uri: Uri): Boolean {
-        return "com.android.providers.downloads.documents" == uri.authority
-    }
+    fun isDownloadsDocument(uri: Uri): Boolean = "com.android.providers.downloads.documents" == uri.authority
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      * @author paulburke
      */
-    fun isMediaDocument(uri: Uri): Boolean {
-        return "com.android.providers.media.documents" == uri.authority
-    }
+    fun isMediaDocument(uri: Uri): Boolean = "com.android.providers.media.documents" == uri.authority
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    fun isGooglePhotosUri(uri: Uri): Boolean {
-        return "com.google.android.apps.photos.content" == uri.authority
-    }
+    fun isGooglePhotosUri(uri: Uri): Boolean = "com.google.android.apps.photos.content" == uri.authority
 
     /**
      * Get the value of the data column for this Uri. This is useful for
@@ -91,19 +82,26 @@ object FileUtils {
      * @author paulburke
      */
     fun getDataColumn(
-        context: Context, uri: Uri?, selection: String?,
-        selectionArgs: Array<String>?
+        context: Context,
+        uri: Uri?,
+        selection: String?,
+        selectionArgs: Array<String>?,
     ): String? {
         var cursor: Cursor? = null
         val column = "_data"
-        val projection = arrayOf(
-            column
-        )
-        try {
-            cursor = context.contentResolver.query(
-                uri!!, projection, selection, selectionArgs,
-                null
+        val projection =
+            arrayOf(
+                column,
             )
+        try {
+            cursor =
+                context.contentResolver.query(
+                    uri!!,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                )
             if (cursor != null && cursor.moveToFirst()) {
                 val column_index = cursor.getColumnIndexOrThrow(column)
                 return cursor.getString(column_index)
@@ -111,7 +109,7 @@ object FileUtils {
         } catch (ex: IllegalArgumentException) {
             Log.i(
                 TAG,
-                String.format(Locale.getDefault(), "getDataColumn: _data - [%s]", ex.message)
+                String.format(Locale.getDefault(), "getDataColumn: _data - [%s]", ex.message),
             )
         } finally {
             cursor?.close()
@@ -132,11 +130,12 @@ object FileUtils {
      * @author paulburke
      */
     @SuppressLint("NewApi")
-    fun getPath(context: Context, uri: Uri): String? {
-        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-
+    fun getPath(
+        context: Context,
+        uri: Uri,
+    ): String? {
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
                 val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -150,10 +149,11 @@ object FileUtils {
                 val id = DocumentsContract.getDocumentId(uri)
                 if (!TextUtils.isEmpty(id)) {
                     return try {
-                        val contentUri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"),
-                            java.lang.Long.valueOf(id)
-                        )
+                        val contentUri =
+                            ContentUris.withAppendedId(
+                                Uri.parse("content://downloads/public_downloads"),
+                                java.lang.Long.valueOf(id),
+                            )
                         getDataColumn(context, contentUri, null, null)
                     } catch (e: NumberFormatException) {
                         Log.i(TAG, e.message!!)
@@ -165,25 +165,31 @@ object FileUtils {
                 val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 val type = split[0]
                 var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                when (type) {
+                    "image" -> {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "video" -> {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "audio" -> {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
                 }
                 val selection = "_id=?"
-                val selectionArgs = arrayOf(
-                    split[1]
-                )
+                val selectionArgs =
+                    arrayOf(
+                        split[1],
+                    )
                 return getDataColumn(context, contentUri, selection, selectionArgs)
             }
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
-
             // Return the remote address
             return if (isGooglePhotosUri(uri)) {
                 uri.lastPathSegment
-            } else getDataColumn(context, uri, null, null)
+            } else {
+                getDataColumn(context, uri, null, null)
+            }
         } else if ("file".equals(uri.scheme, ignoreCase = true)) {
             return uri.path
         }
@@ -198,7 +204,10 @@ object FileUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copyFile(pathFrom: String, pathTo: String) {
+    fun copyFile(
+        pathFrom: String,
+        pathTo: String,
+    ) {
         if (pathFrom.equals(pathTo, ignoreCase = true)) {
             return
         }
