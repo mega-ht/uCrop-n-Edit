@@ -3,7 +3,6 @@ package com.yalantis.ucrop.sample
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.PorterDuff
 import android.graphics.drawable.Animatable
 import android.net.Uri
 import android.os.Bundle
@@ -28,6 +27,8 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Companion.getError
 import com.yalantis.ucrop.UCrop.Companion.getOutput
@@ -454,7 +455,9 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         val stateButtonDrawable = ContextCompat.getDrawable(baseContext, mToolbarCancelDrawable)
         if (stateButtonDrawable != null) {
             stateButtonDrawable.mutate()
-            stateButtonDrawable.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+            stateButtonDrawable.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                mToolbarWidgetColor, BlendModeCompat.SRC_ATOP
+            )
             toolbar!!.navigationIcon = stateButtonDrawable
         }
         setSupportActionBar(toolbar)
@@ -484,7 +487,9 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         if (menuItemLoaderIcon != null) {
             try {
                 menuItemLoaderIcon.mutate()
-                menuItemLoaderIcon.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+                menuItemLoaderIcon.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                    mToolbarWidgetColor, BlendModeCompat.SRC_ATOP
+                )
                 menuItemLoader.icon = menuItemLoaderIcon
             } catch (e: IllegalStateException) {
                 Log.i(
@@ -505,7 +510,9 @@ class SampleActivity : BaseActivity(), UCropFragmentCallback {
         )
         if (menuItemCropIcon != null) {
             menuItemCropIcon.mutate()
-            menuItemCropIcon.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP)
+            menuItemCropIcon.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                mToolbarWidgetColor, BlendModeCompat.SRC_ATOP
+            )
             menuItemCrop.icon = menuItemCropIcon
         }
         return true

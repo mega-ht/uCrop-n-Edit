@@ -66,7 +66,6 @@ public class TransformImageView extends AppCompatImageView {
     private float mContrast = 0;
     private float mSaturation = 0;
 
-    private Allocation mInAllocation;
     private Allocation mOutAllocation;
     private ScriptIntrinsicConvolve3x3 mSharpnessScript;
     private SharpnessScriptTask mSharpnessScriptTask;
@@ -392,7 +391,6 @@ public class TransformImageView extends AppCompatImageView {
      * Once all operation is finished at onPostExecute() in UI thread, it can invalidate and update
      * ImageView UI.
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private class SharpnessScriptTask extends AsyncTask<Float, Void, Boolean> {
         Boolean issued = false;
 
@@ -523,15 +521,12 @@ public class TransformImageView extends AppCompatImageView {
      * <p>Creates RenderScript kernel that performs sharpness manipulation.</p>
      */
     private void createScript(Bitmap bitmap) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return;
-        }
 
         // Initialize RS
         RenderScript rs = RenderScript.create(getContext());
 
         // Allocate buffers
-        mInAllocation = Allocation.createFromBitmap(rs, bitmap.copy(bitmap.getConfig(), false));
+        Allocation mInAllocation = Allocation.createFromBitmap(rs, bitmap.copy(bitmap.getConfig(), false));
         mOutAllocation = Allocation.createFromBitmap(rs, bitmap);
 
         // Load script

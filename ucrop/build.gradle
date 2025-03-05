@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 ext {
     PUBLISH_GROUP_ID = 'com.github.jens-muenker'
-    PUBLISH_VERSION = '4.0.4'
+    PUBLISH_VERSION = '4.1.0'
     PUBLISH_ARTIFACT_ID = 'ucropnedit'
 }
 
@@ -53,10 +53,10 @@ java {
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.21'
     implementation "androidx.appcompat:appcompat:1.7.0"
-    implementation 'androidx.exifinterface:exifinterface:1.3.7'
+    implementation 'androidx.exifinterface:exifinterface:1.4.0'
     implementation "androidx.transition:transition:1.5.1"
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'androidx.activity:activity-ktx:1.9.3'
+    implementation 'androidx.activity:activity-ktx:1.10.1'
 }
 
 apply from: 'publish.gradle'
